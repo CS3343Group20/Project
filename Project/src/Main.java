@@ -4,5 +4,6 @@ public class Main {
 		System.out.println("Sam's here!");
 		System.out.println("Fei's here!");
 		System.out.println("Lok's here!");
+		System.out.println("Elly's here!");
     }
 }

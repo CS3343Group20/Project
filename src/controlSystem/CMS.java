@@ -20,4 +20,7 @@ public class CMS{
 	public void createLift(int capacity) {
 		liftList.add(new Lift(capacity));
 	}
+	public RequestSystem getReqSystem() {
+		return reqSystem;
+	}
 }

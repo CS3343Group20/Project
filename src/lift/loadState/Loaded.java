@@ -1,11 +1,11 @@
 package lift.loadState;
 
-public class Loaded implements LoadState{
+public class Loaded implements Status{
 
 	@Override
-	public String checkLoadState() {
+	public String checkStatus() {
 		// TODO Auto-generated method stub
-		return null;
+		return "loaded";
 	}
 
 }

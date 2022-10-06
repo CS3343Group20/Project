@@ -7,7 +7,7 @@ public class TimeConverter {
 		h=TimeExtracter.extractHour(timeFragments[0]);
 		m=TimeExtracter.extractMinute(timeFragments[1]);
 		s=TimeExtracter.extractSecond(timeFragments[2]);
-		int timeInSecond=h*24*60+m*60+s;
+		int timeInSecond=h*60*60+m*60+s;
 		return timeInSecond;
 	}
 }

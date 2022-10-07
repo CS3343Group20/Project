@@ -4,15 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RequestSystem {
-	private static List<Passenger> waitingList;//<Passenger,RequestTime>
-	private static RequestSystem instance=new RequestSystem();
-	private RequestSystem(){
+	private  List<Request> waitingList;//<Passenger,RequestTime>
+	private CMS cms;
+	public RequestSystem(CMS cms){
 		waitingList = new ArrayList();
+		this.cms=cms;
 	}
-	public static RequestSystem getInstance() {
-		return instance;
+	public void request(Request req) {
+		waitingList.add(req);
+		notifyCMS(req);
 	}
-	public static void request(Passenger passenger,int requestTime) {
-		waitingList.add(passenger);
+	public void deleteFromList(Request req) {
+		waitingList.remove(req);
+	}
+	public void notifyCMS(Request req) {
+		// TODO Auto-generated method stub
+		cms.receiveNewRequest(req);
 	}
 }

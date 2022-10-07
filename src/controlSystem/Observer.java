@@ -1,5 +1,5 @@
 package controlSystem;
 
 public interface Observer {
-	public void update();
+	void receiveNewRequest(Request req);
 }

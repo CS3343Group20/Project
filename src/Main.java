@@ -12,11 +12,15 @@ public class Main {
 		CMS cms= CMS.getInstance();
 		cms.createLift(120);
 		String requestTime="";
-        Scanner input = new Scanner(System.in);
+       
         
-        while (requestTime!="-1") {//begin simulation
+        while (true) {//begin simulation
+        	 Scanner input = new Scanner(System.in);
         	System.out.println("Enter request time (hh:mm:ss): ");
         	requestTime = input.nextLine();
+        	if (requestTime.equals("-1")) {
+        		break;
+        	}
         	System.out.println("Enter current floor: ");
             int currentFloor = input.nextInt();
             System.out.println("Enter target floor: ");
@@ -26,6 +30,7 @@ public class Main {
             Passenger p=new Passenger(weight,currentFloor,targetFloor);
             p.makeRequest(TimeConverter.ConvertTime(requestTime));
         }
+        cms.getReqSystem().printQueue();
         
         
        

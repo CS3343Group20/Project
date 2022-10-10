@@ -29,7 +29,6 @@ public class CMS implements Observer{
 	public RequestSystem getRequestSystem() {return reqSystem;}
 	@Override
 	public void receiveNewRequest(Request req) {//imidiate check
-		// TODO Auto-generated method stub
 		int shortestDistance=Integer.MAX_VALUE;
 		int i=0;
 		Lift assignLift=null;

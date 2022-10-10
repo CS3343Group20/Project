@@ -1,18 +1,17 @@
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Scanner;
 
 import controlSystem.CMS;
 import controlSystem.Passenger;
 import controlSystem.TimeConverter;
+import simulator.Simulator;
 public class Main {
+	
 	public static void main(String[] args) throws ParseException {	
 		CMS cms= CMS.getInstance();
 		cms.createLift(120);
 		String requestTime="";
-       
+        Simulator sim=new Simulator();
         
         while (true) {//begin simulation
         	 Scanner input = new Scanner(System.in);
@@ -31,7 +30,7 @@ public class Main {
             p.makeRequest(TimeConverter.ConvertTime(requestTime));
         }
         cms.getReqSys().printQueue();
-        
+        sim.StartSimulation();
         
        
     }

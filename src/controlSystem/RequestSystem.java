@@ -1,6 +1,7 @@
 package controlSystem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,36 +9,36 @@ import java.util.List;
 public class RequestSystem {
 	private  List<Request> waitingList;//<Passenger,RequestTime>
 	private CMS cms;
-	private HashMap<Integer,List<Request>> waitingList2;
+	private HashMap<Integer,List<Request>> eachFloorReq;
 	public RequestSystem(CMS cms){
 		waitingList = new ArrayList();
 		this.cms=cms;
-		waitingList2 = new HashMap();
+		eachFloorReq = new HashMap();
 	}
 	public void request(Request req) {
-		//waitingList.add(req);
+		waitingList.add(req);
+		RequestComparator sortrule=new RequestComparator();
 		int reqFloor=req.getPassenger().getCurrentFloor();
-		if (waitingList2.get(reqFloor)==null) {
+		waitingList.sort(sortrule);
+		if (eachFloorReq.get(reqFloor)==null) {
 			List<Request> waitingQueue=new ArrayList();
 			waitingQueue.add(req);
-			waitingList2.put(reqFloor,waitingQueue);
+			eachFloorReq.put(reqFloor,waitingQueue);
 		}
 		else {
-			waitingList2.get(reqFloor).add(req);
+			eachFloorReq.get(reqFloor).add(req);
+			eachFloorReq.get(reqFloor).sort(sortrule);
 		}
 	}
 	public void deleteFromList(Request req) {
 		int reqFloor=req.getPassenger().getCurrentFloor();
-		waitingList2.get(reqFloor).remove(req);
-		//waitingList.remove(req);
-	}
-	public void notifyCMS(Request req) {
-		cms.receiveNewRequest(req);
+		eachFloorReq.get(reqFloor).remove(req);
+		waitingList.remove(req);
 	}
 	
-	
+	public HashMap<Integer,List<Request>> getAllReq(){return eachFloorReq;}
 	public void printQueue() {
-		waitingList2.forEach((k,v)->{
+		eachFloorReq.forEach((k,v)->{
 			System.out.printf("Floor %s (request count): %s%n Request time: ",k,v.size());
 			v.forEach((r)->{
 				System.out.printf("%s ", r.getRequestTime());

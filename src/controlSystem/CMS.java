@@ -7,13 +7,13 @@ import java.util.Optional;
 import lift.Lift;
 import lift.loadState.*;
 
-public class CMS implements Observer{
+public class CMS{
 	private static CMS instance=new CMS();
 	List<Lift> liftList;
-	RequestSystem reqSystem;
+	RequestSystem reqSys;
 	int time;
 	private CMS() {
-		reqSystem=new RequestSystem(this);
+		reqSys=new RequestSystem(this);
 		liftList=new ArrayList();
 	};
 	public static CMS getInstance() {
@@ -23,60 +23,70 @@ public class CMS implements Observer{
 		liftList.add(new Lift(capacity));
 		System.out.println("Lift created!");
 	}
-	public RequestSystem getReqSystem() {
-		return reqSystem;
+	public RequestSystem getReqSys() {
+		return reqSys;
 	}
-	public RequestSystem getRequestSystem() {return reqSystem;}
-	@Override
-	public void receiveNewRequest(Request req) {//imidiate check
+
+	public boolean checkAvailablity(Lift lift,Request r) {
+		String status=lift.getStatus();
+		if (status.equals("idle"))
+			return true;
+		else if(status.equals("loaded")) {
+			Passenger p=r.getPassenger();
+			if(sameDir(lift,p)) {
+				if(checkPassed(lift,p)) {
+					return false;
+				}
+				else return true;
+			}
+		}
+		return false;
+	}
+	public boolean checkPassed(Lift lift, Passenger p) {//only triggers when same direction
+		// TODO Auto-generated method stub
+		int dir=lift.getDirection();
+		if (dir==1) {//go up
+			if(lift.getCurrentFloor()>p.getCurrentFloor())
+				return true;
+			else return false;
+		}
+		else {//go down
+			if(lift.getCurrentFloor()<p.getCurrentFloor())
+				return true;
+			else return false;
+		}
+	}
+	public void assignClosest(Request req) {
 		int shortestDistance=Integer.MAX_VALUE;
-		int i=0;
 		Lift assignLift=null;
-		for (Lift lift:liftList) {//the above code should be extract into seperate methods for code maintainence
-			if (lift.getStatus()=="idle") {
-				assignLift=lift;
-			}
-			else if(lift.getDirection()!=req.getPassenger().getDirection()) {//the lift is going in opposite direction with the passenger 
-				//ignore
-			}
-			else {
-				if(lift.getDirection()==1) {//the lift is going up
-					if(lift.getCurrentFloor()>req.getPassenger().getCurrentFloor()) {//already get pass the passenger
-						//ignore
-					}
-					else {//able to pick up
-						int distance= calculateDistance(lift,req);
-						if(distance<shortestDistance) {
-							assignLift=lift;
-							shortestDistance=distance;
-						}
-					}
-				}
-				else {//the lift is going down
-					if(lift.getCurrentFloor()<req.getPassenger().getCurrentFloor()) {//already get pass the passenger
-						//ignore
-					}
-					else {//able to pick up
-						int distance= calculateDistance(lift,req);
-						if(distance<shortestDistance) {
-							assignLift=lift;
-							shortestDistance=distance;
-						}
-					}
+		for (Lift lift:liftList) {
+			if (checkAvailablity(lift,req)) {
+				int distance= calculateDistance(lift,req);
+				if(distance<shortestDistance) {
+					assignLift=lift;
+					shortestDistance=distance;
 				}
 			}
-			i++;
-		}//the for loop end
+		}
 		if (assignLift!=null) {
 			if (assignLift.getStatus()=="idle") {
 				assignLift.setStatus(new Loaded());
 			}
-			assignLift.getPickupList().add(req.getPassenger());
 		}
 	}
+	
 	public int calculateDistance(Lift lift,Request req) {
 		return Math.abs(req.getPassenger().getCurrentFloor()-lift.getCurrentFloor());
 	}
 	
+	public boolean curHaveRequest() {
+		return reqSys.getAllReq().isEmpty();
+	}
+	public boolean curFlrHaveRequest(int f) {
+		return reqSys.getAllReq().get(f).isEmpty();
+	}
+	public boolean sameDir(Lift lift,Passenger p) {
+		return lift.getDirection()==p.getDirection();
+	}
 	
 }

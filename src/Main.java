@@ -30,7 +30,7 @@ public class Main {
             Passenger p=new Passenger(weight,currentFloor,targetFloor);
             p.makeRequest(TimeConverter.ConvertTime(requestTime));
         }
-        cms.getReqSystem().printQueue();
+        cms.getReqSys().printQueue();
         
         
        

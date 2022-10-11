@@ -51,7 +51,7 @@ public class Handler {
 			Iterator<Request> iterator=reqSys.getEachFloorReq().get(f).iterator();
 			while(iterator.hasNext()){
 				Request r =iterator.next();
-				if(r.getRequestTime()<=curTime) {
+				if(r.getRequestTime()<=curTime&&r.getPassenger().getDirection()==lift.getDirection()) {
 					try {
 						pickupPassenger(r.getPassenger());
 						reqSys.getAllReq().remove(r);

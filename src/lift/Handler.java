@@ -12,7 +12,8 @@ import lift.loadState.Idle;
 
 public class Handler {
 	private Lift lift;
-	private RequestSystem reqSys=CMS.getInstance().getReqSys();
+	private CMS cms=CMS.getInstance();
+	private RequestSystem reqSys=cms.getReqSys();
 	public Handler(Lift lift) {
 		this.lift=lift;
 	};
@@ -68,6 +69,7 @@ public class Handler {
 				}
 			}
 		}
+		lift.getReqFloorList().remove((Integer) f);
 		checkArriveToTarget();
 	}
 	public void checkArriveToTarget() {
@@ -81,14 +83,15 @@ public class Handler {
 	}
 	public void directionHandle(int curTime) {
 		// TODO Auto-generated method stub
-		if(CMS.getInstance().curHaveRequest(curTime)==false&&lift.getPassengerList().size()==0) {
+		if(lift.getReqFloorList().size()==0&&lift.getPassengerList().size()==0) {
 			if (lift.getCurrentFloor()>0 && lift.getDirection()==1) {
 				lift.setDirection(0);
 			}
 		}
-		if(lift.getCurrentFloor()==0&&lift.getPassengerList().size()==0) {
+		if(lift.getCurrentFloor()==0&&lift.getPassengerList().size()==0&&lift.getReqFloorList().size()==0) {
 			lift.setDirection(1);
 			lift.setStatus(new Idle());
+			cms.setRunningLift(cms.getRunningLift()-1);
 		}
 	}
 }

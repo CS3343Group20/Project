@@ -107,9 +107,9 @@ public class CMS{
 		int i=0;
 		for (Lift lift:liftList) {
 			lift.getHandler().handleCurrentFloor(lift.getCurrentFloor(), curTime);
-			//lift.getHandler().directionHandle(curTime);
+			lift.getHandler().directionHandle(curTime);
 			lift.move();
-			System.out.printf("lift %s in %s/F %n",i,lift.getCurrentFloor());
+			System.out.printf("lift %s in %s/F (%s)%n",i,lift.getCurrentFloor(),curTime);
 			i++;
 		}
 	}

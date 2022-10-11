@@ -1,6 +1,8 @@
 package controlSystem;
 
-public class Request {
+import java.util.Comparator;
+
+public class Request{
 	private Passenger p;
 	private int requestTime;
 	public Request(Passenger p,int time) {
@@ -9,4 +11,7 @@ public class Request {
 	}
 	public Passenger getPassenger() {return p;}
 	public int getRequestTime() {return requestTime;}
+	
+	
+	
 }

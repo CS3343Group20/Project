@@ -10,4 +10,11 @@ public class TimeConverter {
 		int timeInSecond=h*60*60+m*60+s;
 		return timeInSecond;
 	}
+	public static String fromStoTime(int second) {
+		String hour = String.valueOf(second/3600);
+		String min=String.valueOf(second%3600/60);
+		String sec=String.valueOf(second%3600%60);
+		String res=hour+":"+min+":"+sec;
+		return res;
+	}
 }

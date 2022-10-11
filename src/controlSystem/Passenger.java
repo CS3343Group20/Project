@@ -4,7 +4,7 @@ public class Passenger {
 	private int weight;
 	private int currentFloor;
 	private int targetFloor;
-	private String requestDirection;
+	private String reqDir;
 	private int direction;
 	private RequestSystem reqSys;
 	
@@ -19,7 +19,7 @@ public class Passenger {
 			direction=1;
 		}
 		else direction=0;
-		reqSys=CMS.getInstance().getReqSystem();
+		reqSys=CMS.getInstance().getReqSys();
 	}
 	public int getCurrentFloor() {return currentFloor;}
 	public int getTargetFloor() {return targetFloor;}

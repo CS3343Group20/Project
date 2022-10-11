@@ -32,6 +32,8 @@ public class CMS{
 	public void setRunningLift(int i) {
 		runningLift=i;
 	}
+	public void setCurrentTime(int t) {time=t;}
+	public int getCurrentTime() {return time;}
 	public boolean checkAvailablity(Lift lift,Request r) {
 		String status=lift.getStatus();
 		if (status.equals("idle"))
@@ -107,7 +109,7 @@ public class CMS{
 		int i=0;
 		for (Lift lift:liftList) {
 			lift.getHandler().handleCurrentFloor(lift.getCurrentFloor(), curTime);
-			lift.getHandler().directionHandle(curTime);
+			//lift.getHandler().directionHandle(curTime);
 			lift.move();
 			System.out.printf("lift %s in %s/F (%s)%n",i,lift.getCurrentFloor(),curTime);
 			i++;

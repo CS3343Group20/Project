@@ -14,6 +14,7 @@ public class Simulator {//userless now just ignore it
 	}
 	public void StartSimulation() {
 		while (currentTime!=86400) {
+			cms.setCurrentTime(currentTime);
 			if(!cms.curHaveRequest(currentTime)) {
 				if(cms.getRunningLift()!=0) {
 					cms.operate(currentTime);

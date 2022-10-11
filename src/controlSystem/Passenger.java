@@ -4,7 +4,6 @@ public class Passenger {
 	private int weight;
 	private int currentFloor;
 	private int targetFloor;
-	private String reqDir;
 	private int direction;
 	private RequestSystem reqSys;
 	

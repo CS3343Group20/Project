@@ -1,7 +1,6 @@
 package lift;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import controlSystem.Passenger;
 import lift.loadState.Idle;
@@ -15,15 +14,16 @@ public class Lift {
 	private Handler handler;
 	private Status status;
 	private ArrayList<Passenger> passengerList;
-	private ArrayList<Passenger> pickupList;
+	private ArrayList<Integer> floorList;//show request floors that are accepted by current lift
 	public Lift(int capacity) {
 		direction=1;
 		currentFloor=0;
 		loadWeight=0;
 		handler=new Handler(this);
 		status = new Idle();
-		passengerList = new ArrayList();
-		pickupList = new ArrayList();
+		passengerList = new ArrayList<Passenger>();
+		floorList = new ArrayList<Integer>();
+		this.capacity=capacity;
 	}
 	public int getDirection() {return direction;}
 	public int getCapacity() {return capacity;}
@@ -37,15 +37,21 @@ public class Lift {
 		loadWeight=weight;
 	}
 	public ArrayList<Passenger> getPassengerList() {return passengerList;}
-	public ArrayList<Passenger> getPickupList(){return pickupList;}
+	public ArrayList<Integer> getReqFloorList(){return floorList;}
 	public Handler getHandler() {return handler;}
 	
 	public void move() {
-		if (direction==1) {
-			currentFloor++;
+		if (!this.getStatus().equals("idle")) {
+			if (direction==1) {
+				currentFloor++;
+			}
+			else {
+				currentFloor--;
+			}
 		}
-		else {
-			currentFloor--;
-		}
+	}
+	public void setDirection(int dir) {
+		// TODO Auto-generated method stub
+		direction=dir;
 	}
 }

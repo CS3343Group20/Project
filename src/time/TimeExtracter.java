@@ -1,4 +1,4 @@
-package controlSystem;
+package time;
 
 import exceptions.timeException.*;
 

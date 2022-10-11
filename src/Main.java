@@ -3,9 +3,9 @@ import java.util.Scanner;
 
 import controlSystem.CMS;
 import controlSystem.Passenger;
-import controlSystem.TimeConverter;
 import exceptions.timeException.TimeFormatException;
 import simulator.Simulator;
+import time.TimeConverter;
 public class Main {
 	
 	public static void main(String[] args) throws ParseException {	

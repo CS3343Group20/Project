@@ -11,9 +11,9 @@ import lift.loadState.Full;
 import lift.loadState.Idle;
 
 public class Handler {
-	private Lift lift;
-	private CMS cms=CMS.getInstance();
-	private RequestSystem reqSys=cms.getReqSys();
+	protected Lift lift;
+	protected CMS cms=CMS.getInstance();
+	protected RequestSystem reqSys=cms.getReqSys();
 	public Handler(Lift lift) {
 		this.lift=lift;
 	};
@@ -56,7 +56,7 @@ public class Handler {
 						pickupPassenger(r.getPassenger());
 						reqSys.getAllReq().remove(r);
 						iterator.remove();
-						System.out.println("Loaded people");
+						System.out.println("Loaded people at"+lift.getCurrentFloor()+"F");
 					} catch (OverWeightException e) {
 						System.out.println("Ignore this people since overload");
 						lift.setStatus(new Full());

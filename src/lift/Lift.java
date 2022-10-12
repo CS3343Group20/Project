@@ -11,6 +11,7 @@ public class Lift {
 	private int capacity;
 	private int loadWeight;
 	private int direction;
+	private int requestDir;
 	private int currentFloor;
 	private Handler handler;
 	private Status status;
@@ -18,6 +19,7 @@ public class Lift {
 	private ArrayList<Integer> floorList;//show request floors that are accepted by current lift
 	public Lift(int capacity) {
 		direction=1;
+		requestDir=1;
 		currentFloor=0;
 		loadWeight=0;
 		handler=new Handler(this);
@@ -42,7 +44,7 @@ public class Lift {
 	public Handler getHandler() {return handler;}
 	
 	public void move() {
-		handler.directionHandle(CMS.getInstance().getCurrentTime());
+		handler.directionHandle();
 		if (!this.getStatus().equals("idle")) {
 			if (direction==1) {
 				currentFloor++;
@@ -53,7 +55,10 @@ public class Lift {
 		}
 	}
 	public void setDirection(int dir) {
-		// TODO Auto-generated method stub
 		direction=dir;
 	}
+	public void setReqDir(int reqDir) {
+		requestDir=reqDir;		
+	}
+	public int getReqDir() {return requestDir;}
 }

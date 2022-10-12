@@ -185,9 +185,13 @@ public class CMS{
 		for (Lift lift:liftList) {
 			System.out.printf("-----------------------------------%n");
 			System.out.printf("lift %s in %s/F (%s)%n",i,lift.getCurrentFloor(),curTime);
-			lift.getHandler().handleCurrentFloor(lift.getCurrentFloor());
+			lift.getHandler().handleCurrentFloor(lift.getCurrentFloor(),i);
 			lift.move();//directon pre handle
-			System.out.printf("lift %s moving to %s/F (%s)%n",i,lift.getCurrentFloor(),curTime);
+			if (lift.getStatus().equals("idle")) {
+				System.out.printf("lift %s is idling......%n",i);
+			}
+			else
+				System.out.printf("lift %s moving to %s/F (%s)%n",i,lift.getCurrentFloor(),curTime);
 			i++;
 		}
 	}

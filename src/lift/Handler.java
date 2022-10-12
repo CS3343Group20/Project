@@ -108,33 +108,35 @@ public class Handler {
 		}
 		
 	}
-	public void handleCurrentFloor(int f) {//testing
+	public void handleCurrentFloor(int f,int index) {//testing
 		if (curFloorHaveRequest2(f)) {
 			Iterator<Request> iterator;
-			if (lift.getDirection()==1&&lift.getReqDir()==1)//here have problem
-				iterator=cms.getBuilding().getFlrMap().get((Integer) f).getUpQueue().iterator();
-			else
-				iterator=cms.getBuilding().getFlrMap().get((Integer) f).getDownQueue().iterator();
-			int count=0;
-			while(iterator.hasNext()){
-				Request r =iterator.next();		
-				try {
-					pickupPassenger(r.getPassenger());
-					reqSys.deleteFromList(r);
-					iterator.remove();
-					count++;
-					
-				} catch (OverWeightException e) {
-					System.out.printf("Ignore people %s since overload%n",count);
-					lift.setStatus(new Full());
-					break;
+			if(lift.getReqFloorList().contains((Integer)f)) {
+				if (lift.getDirection()==1&&lift.getReqDir()==1)//here have problem
+					iterator=cms.getBuilding().getFlrMap().get((Integer) f).getUpQueue().iterator();
+				else
+					iterator=cms.getBuilding().getFlrMap().get((Integer) f).getDownQueue().iterator();
+				int count=0;
+				while(iterator.hasNext()){
+					Request r =iterator.next();		
+					try {
+						pickupPassenger(r.getPassenger());
+						reqSys.deleteFromList(r);
+						iterator.remove();
+						count++;
+						
+					} catch (OverWeightException e) {
+						System.out.printf("Ignore people %s since overload%n",count);
+						lift.setStatus(new Full());
+						break;
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+						break;
+					}	
 				}
-				catch (Exception e) {
-					e.printStackTrace();
-					break;
-				}	
-			}
-			System.out.printf("Loaded %s people at %s/F %n",count,lift.getCurrentFloor());
+				System.out.printf("Lift %s Loaded %s people at %s/F %n",index,count,lift.getCurrentFloor());
+			}	
 		}
 		lift.getReqFloorList().remove((Integer) f);
 		checkArriveToTarget();

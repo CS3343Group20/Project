@@ -16,7 +16,8 @@ public class Lift {
 	private Handler handler;
 	private Status status;
 	private ArrayList<Passenger> passengerList;
-	private ArrayList<Integer> floorList;//show request floors that are accepted by current lift
+	private ArrayList<Integer> upfloorList;//show request floors that are accepted by current lift
+	private ArrayList<Integer> downfloorList;
 	public Lift(int capacity) {
 		direction=1;
 		requestDir=1;
@@ -25,7 +26,8 @@ public class Lift {
 		handler=new Handler(this);
 		status = new Idle();
 		passengerList = new ArrayList<Passenger>();
-		floorList = new ArrayList<Integer>();
+		upfloorList = new ArrayList<Integer>();
+		downfloorList = new ArrayList<Integer>();
 		this.capacity=capacity;
 	}
 	public int getDirection() {return direction;}
@@ -40,7 +42,8 @@ public class Lift {
 		loadWeight=weight;
 	}
 	public ArrayList<Passenger> getPassengerList() {return passengerList;}
-	public ArrayList<Integer> getReqFloorList(){return floorList;}
+	public ArrayList<Integer> getUpReqFloorList(){return upfloorList;}
+	public ArrayList<Integer> getDownReqFloorList(){return downfloorList;}
 	public Handler getHandler() {return handler;}
 	
 	public void move() {
@@ -54,6 +57,9 @@ public class Lift {
 			}
 		}
 	}
+	public boolean isEmpty() {
+		return passengerList.isEmpty();
+	}
 	public void setDirection(int dir) {
 		direction=dir;
 	}
@@ -61,4 +67,7 @@ public class Lift {
 		requestDir=reqDir;		
 	}
 	public int getReqDir() {return requestDir;}
+	public int totalAcceptedReq() {
+		return (this.upfloorList.size()+this.downfloorList.size());
+	}
 }

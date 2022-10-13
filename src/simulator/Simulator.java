@@ -29,7 +29,7 @@ public class Simulator {//userless now just ignore it
 			}
 			cms.setCurrentTime(currentTime);
 			if(!cms.curHaveRequest()) {
-				if(cms.getRunningLift()!=0) {
+				if(cms.anyLiftRunning()) {
 					cms.operate(currentTime);
 				}
 			}

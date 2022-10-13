@@ -47,7 +47,7 @@ public class Handler {
 //		return true;
 //	}
 	public boolean curFloorHaveAcceptedReq(int f) {
-		return lift.getReqFloorList().contains(f);
+		return (lift.getUpReqFloorList().contains(f)||lift.getDownReqFloorList().contains(f));
 	}
 	public boolean curFloorHaveRequest2(int f) {
 		if(cms.getBuilding().getFlrMap().get(f).haveUpReq()||cms.getBuilding().getFlrMap().get(f).haveDownReq()) {
@@ -92,17 +92,27 @@ public class Handler {
 	}
 	public void directionHandle() {
 		if(!lift.getStatus().equals("idle")) {
-			if(lift.getReqFloorList().size()==0&&lift.getPassengerList().size()==0) {
+			if(lift.totalAcceptedReq()==0&&lift.isEmpty()) {//no request accepted and no passenger in lift
 				if (lift.getCurrentFloor()>0 && lift.getDirection()==1) {//get back to ground
 					lift.setDirection(0);
 				}
 			}
-			if(lift.getReqFloorList().size()==0&&lift.getPassengerList().size()>0&&lift.getReqDir()==0) {
-				if (lift.getCurrentFloor()>0 && lift.getDirection()==1) {//get back to ground
+			else if(lift.totalAcceptedReq()==0&&lift.getPassengerList().size()>0) {
+				int dirflag=0;
+				for (Passenger p:lift.getPassengerList()) {
+					if (p.getDirection()==1) {
+						dirflag=1;
+						break;
+					}
+				}
+				lift.setDirection(dirflag);	
+			}
+			else if(lift.getUpReqFloorList().size()==0&&lift.getDownReqFloorList().size()>0&&lift.isEmpty()) {
+				if(lift.getCurrentFloor()>lift.getDownReqFloorList().get(0)) {
 					lift.setDirection(0);
 				}
 			}
-			if(lift.getCurrentFloor()==0&&lift.getPassengerList().size()==0&&lift.getReqFloorList().size()==0) {
+			if(lift.getCurrentFloor()==0&&lift.isEmpty()&&lift.totalAcceptedReq()==0) {
 				lift.setDirection(1);
 				lift.setStatus(new Idle());
 				cms.setRunningLift(cms.getRunningLift()-1);
@@ -111,12 +121,17 @@ public class Handler {
 	}
 	public void handleCurrentFloor(int f,int index) {//testing
 		if (curFloorHaveRequest2(f)) {
-			Iterator<Request> iterator;
-			if(lift.getReqFloorList().contains((Integer)f)) {
-				if (lift.getDirection()==1&&lift.getReqDir()==1)//here have problem
-					iterator=cms.getBuilding().getFlrMap().get((Integer) f).getUpQueue().iterator();
-				else
-					iterator=cms.getBuilding().getFlrMap().get((Integer) f).getDownQueue().iterator();
+			Iterator<Request> iterator=null;
+			int dirflag=-1;
+			if(lift.getUpReqFloorList().size()>0) {
+				iterator=cms.getBuilding().getFlrMap().get((Integer) f).getUpQueue().iterator();
+				dirflag=1;
+			}
+			else if(lift.getDownReqFloorList().size()>0){
+				iterator=cms.getBuilding().getFlrMap().get((Integer) f).getDownQueue().iterator();
+				dirflag=0;
+			}
+			if (dirflag!=-1) {
 				int count=0;
 				while(iterator.hasNext()){
 					Request r =iterator.next();		
@@ -137,8 +152,11 @@ public class Handler {
 					}	
 				}
 				System.out.printf("Lift %s Loaded %s people at %s/F %n",index,count,lift.getCurrentFloor());
-				lift.getReqFloorList().remove((Integer) f);
-			}	
+				if(dirflag==1)
+					lift.getUpReqFloorList().remove((Integer) f);	
+				else
+					lift.getDownReqFloorList().remove((Integer)f);
+			}
 			
 		}
 		checkArriveToTarget(index);

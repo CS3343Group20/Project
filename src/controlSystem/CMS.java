@@ -65,31 +65,6 @@ public class CMS{
 			else return false;
 		}
 	}
-	public void assignClosest(Request req) {
-		//TODO check if any lift has request on that floor already, if yes then assign that lift
-		
-		int shortestDistance=Integer.MAX_VALUE;
-		Lift assignLift=null;
-		int reqFloor=req.getPassenger().getCurrentFloor();
-		for (Lift lift:liftList) {
-			if (checkAvailablity(lift,req)) {
-				int distance= calculateDistance(lift,req);
-				if(distance<shortestDistance) {
-					assignLift=lift;
-					shortestDistance=distance;
-				}
-			}
-		}
-		if (assignLift!=null) {
-			if (assignLift.getStatus().equals("idle")) {
-				assignLift.setStatus(new Loaded());
-				runningLift++;
-			}
-			if(!assignLift.getReqFloorList().contains(reqFloor)) {//does not contains request from that floor before
-				assignLift.getReqFloorList().add(reqFloor);
-			}
-		}
-	}
 	public void assignClosest2(int reqf,int dir) {
 		//TODO check if any lift has request on that floor already, if yes then assign that lift
 		
@@ -110,15 +85,19 @@ public class CMS{
 				assignLift.setStatus(new Loaded());
 				runningLift++;
 			}
-			if(!assignLift.getReqFloorList().contains(reqFloor)) {//does not contains request from that floor before
-				assignLift.getReqFloorList().add(reqFloor);
-			}
+			
 			//lift assign to that floor request and set flag to prevent future allocation
 			if(dir==1) {
+				if(!assignLift.getUpReqFloorList().contains(reqFloor)) {//does not contains request from that floor before
+					assignLift.getUpReqFloorList().add(reqFloor);
+				}
 				b.getFlrMap().get(reqf).setUpflag(true);
 				assignLift.setReqDir(1);
 			}	
 			else {
+				if(!assignLift.getDownReqFloorList().contains(reqFloor)) {//does not contains request from that floor before
+					assignLift.getDownReqFloorList().add(reqFloor);
+				}
 				b.getFlrMap().get(reqf).setDownflag(true);
 				assignLift.setReqDir(0);
 			}
@@ -161,13 +140,6 @@ public class CMS{
 		return Math.abs(req.getPassenger().getCurrentFloor()-lift.getCurrentFloor());
 	}
 	
-	public boolean curHaveRequest(int curTime) {
-		if(reqSys.getAllReq().isEmpty())
-			return false;
-		else if(reqSys.getAllReq().get(0).getRequestTime()<=curTime)
-			return true;
-		else return false;
-	}
 	public boolean curHaveRequest() {
 		if(reqSys.getAllReq().isEmpty())
 			return false;
@@ -182,7 +154,7 @@ public class CMS{
 	}
 	public void operate(int curTime) {
 		int i=0;
-		System.out.println("Current time: "+curTime);
+		System.out.printf("%nCurrent time: %s%n",curTime);
 		for (Lift lift:liftList) {
 			System.out.printf("-----------------------------------%n");
 			System.out.printf("lift %s in %s/F (%s)%n",i,lift.getCurrentFloor(),curTime);

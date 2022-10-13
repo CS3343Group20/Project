@@ -13,7 +13,7 @@ public class Floor {
 		goDownList=new ArrayList<>();
 		upflag=false;
 		downflag=false;
-		int floorNum=f;
+		floorNum=f;
 	}
 	public boolean haveUpReq(int curTime) {
 		for (Request r: goUpList) {

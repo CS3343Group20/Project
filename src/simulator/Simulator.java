@@ -34,15 +34,6 @@ public class Simulator {//userless now just ignore it
 				}
 			}
 			else {
-				/*
-				 * for(Map.Entry<Integer, List<Request>> map:
-				 * cms.getReqSys().getEachFloorReq().entrySet()) { //check all request to design
-				 * if we need to assign new, this part incomplete now
-				 * System.out.println("Floor "+map.getKey()); for (Request r: map.getValue()) {
-				 * if (r.getRequestTime()<=currentTime) { cms.assignClosest(r); } } }
-				 * cms.operate(currentTime);
-				 * System.out.println("Current time is: "+currentTime);
-				 */
 				for (Map.Entry<Integer, Floor> flrMap: b.getFlrMap().entrySet()) {
 					Floor f=flrMap.getValue();
 					if (f.haveUpReq(currentTime)&&!f.getUpflag()) {//have request and not yet accepted by any lift
@@ -56,7 +47,6 @@ public class Simulator {//userless now just ignore it
 				}
 				cms.operate(currentTime);
 			}
-			
 			currentTime++;
 		}
 		System.out.println("Simulation ends!");

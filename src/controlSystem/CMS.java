@@ -37,34 +37,7 @@ public class CMS{
 	}
 	public void setCurrentTime(int t) {time=t;}
 	public int getCurrentTime() {return time;}
-	public boolean checkAvailablity(Lift lift,Request r) {
-		String status=lift.getStatus();
-		if (status.equals("idle"))
-			return true;
-		else if(status.equals("loaded")) {
-			Passenger p=r.getPassenger();
-			if(sameDir(lift,p)) {
-				if(checkPassed(lift,p)) {
-					return false;
-				}
-				else return true;
-			}
-		}
-		return false;
-	}
-	public boolean checkPassed(Lift lift, Passenger p) {//only triggers when same direction
-		int dir=lift.getDirection();
-		if (dir==1) {//go up
-			if(lift.getCurrentFloor()>p.getCurrentFloor())
-				return true;
-			else return false;
-		}
-		else {//go down
-			if(lift.getCurrentFloor()<p.getCurrentFloor())
-				return true;
-			else return false;
-		}
-	}
+
 	public void assignClosest2(int reqf,int dir) {
 		//TODO check if any lift has request on that floor already, if yes then assign that lift
 		
@@ -136,9 +109,6 @@ public class CMS{
 	private int calculateDistance2(Lift lift, int reqf) {
 		return  Math.abs(reqf-lift.getCurrentFloor());
 	}
-	public int calculateDistance(Lift lift,Request req) {
-		return Math.abs(req.getPassenger().getCurrentFloor()-lift.getCurrentFloor());
-	}
 	
 	public boolean curHaveRequest() {
 		if(reqSys.getAllReq().isEmpty())
@@ -146,12 +116,7 @@ public class CMS{
 		else 
 			return true;
 	}
-//	public boolean curFlrHaveRequest(int f) {
-//		return reqSys.getEachFloorReq().get(f).isEmpty();
-//	}
-	public boolean sameDir(Lift lift,Passenger p) {
-		return lift.getDirection()==p.getDirection();
-	}
+
 	public void operate(int curTime) {
 		int i=0;
 		System.out.printf("%nCurrent time: %s%n",curTime);

@@ -182,6 +182,7 @@ public class CMS{
 	}
 	public void operate(int curTime) {
 		int i=0;
+		System.out.println("Current time: "+curTime);
 		for (Lift lift:liftList) {
 			System.out.printf("-----------------------------------%n");
 			System.out.printf("lift %s in %s/F (%s)%n",i,lift.getCurrentFloor(),curTime);

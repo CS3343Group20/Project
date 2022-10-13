@@ -34,11 +34,11 @@ public class Handler {
 		}
 		
 	}
-	public void dropPassenger(Passenger p,Iterator<Passenger> itr) {
+	public void dropPassenger(Passenger p,Iterator<Passenger> itr,int i) {
 		int newWeight=lift.getLoadWeight()-p.getWeight();
 		lift.setLoadWeight(newWeight);
 		itr.remove();
-		System.out.println("dropped Passenger!");
+		System.out.printf("lift %s dropped Passenger!%n",i);
 	}
 //	public boolean curFloorHaveRequest(int f) {
 //		if(reqSys.getEachFloorReq().get(f)==null) {
@@ -81,32 +81,33 @@ public class Handler {
 //		lift.getReqFloorList().remove((Integer) f);
 //		checkArriveToTarget();
 //	}
-	public void checkArriveToTarget() {
+	public void checkArriveToTarget(int i) {
 		Iterator<Passenger> iterator=lift.getPassengerList().iterator();
 		while(iterator.hasNext()){
 			Passenger p=iterator.next();
 			if(lift.getCurrentFloor()==p.getTargetFloor()) {
-				dropPassenger(p,iterator);
+				dropPassenger(p,iterator,i);
 			}
 		}
 	}
 	public void directionHandle() {
-		if(lift.getReqFloorList().size()==0&&lift.getPassengerList().size()==0) {
-			if (lift.getCurrentFloor()>0 && lift.getDirection()==1) {//get back to ground
-				lift.setDirection(0);
+		if(!lift.getStatus().equals("idle")) {
+			if(lift.getReqFloorList().size()==0&&lift.getPassengerList().size()==0) {
+				if (lift.getCurrentFloor()>0 && lift.getDirection()==1) {//get back to ground
+					lift.setDirection(0);
+				}
+			}
+			if(lift.getReqFloorList().size()==0&&lift.getPassengerList().size()>0&&lift.getReqDir()==0) {
+				if (lift.getCurrentFloor()>0 && lift.getDirection()==1) {//get back to ground
+					lift.setDirection(0);
+				}
+			}
+			if(lift.getCurrentFloor()==0&&lift.getPassengerList().size()==0&&lift.getReqFloorList().size()==0) {
+				lift.setDirection(1);
+				lift.setStatus(new Idle());
+				cms.setRunningLift(cms.getRunningLift()-1);
 			}
 		}
-		if(lift.getReqFloorList().size()==0&&lift.getPassengerList().size()>0&&lift.getReqDir()==0) {
-			if (lift.getCurrentFloor()>0 && lift.getDirection()==1) {//get back to ground
-				lift.setDirection(0);
-			}
-		}
-		if(lift.getCurrentFloor()==0&&lift.getPassengerList().size()==0&&lift.getReqFloorList().size()==0) {
-			lift.setDirection(1);
-			lift.setStatus(new Idle());
-			cms.setRunningLift(cms.getRunningLift()-1);
-		}
-		
 	}
 	public void handleCurrentFloor(int f,int index) {//testing
 		if (curFloorHaveRequest2(f)) {
@@ -136,10 +137,11 @@ public class Handler {
 					}	
 				}
 				System.out.printf("Lift %s Loaded %s people at %s/F %n",index,count,lift.getCurrentFloor());
+				lift.getReqFloorList().remove((Integer) f);
 			}	
+			
 		}
-		lift.getReqFloorList().remove((Integer) f);
-		checkArriveToTarget();
+		checkArriveToTarget(index);
 		
 	}
 }

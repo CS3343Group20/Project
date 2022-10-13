@@ -6,6 +6,7 @@ import java.util.List;
 import building.Building;
 import lift.Lift;
 import lift.loadState.Loaded;
+import time.TimeConverter;
 
 public class CMS{
 	private Building b;
@@ -52,6 +53,13 @@ public class CMS{
 					shortestDistance=distance;
 				}
 			}
+			else {
+				int distance=lift.checkClosestFromPassenger(dir,reqf);
+				if(distance<shortestDistance) {
+					assignLift=lift;
+					shortestDistance=distance;
+				}
+			}
 		}
 		if (assignLift!=null) {
 			if (assignLift.getStatus().equals("idle")) {
@@ -61,14 +69,14 @@ public class CMS{
 			
 			//lift assign to that floor request and set flag to prevent future allocation
 			if(dir==1) {
-				if(!assignLift.getUpReqFloorList().contains(reqFloor)) {//does not contains request from that floor before
+				if(!assignLift.getUpReqFloorList().contains(reqFloor)) {//does not contains up request from that floor before
 					assignLift.getUpReqFloorList().add(reqFloor);
 				}
 				b.getFlrMap().get(reqf).setUpflag(true);
 				assignLift.setReqDir(1);
 			}	
 			else {
-				if(!assignLift.getDownReqFloorList().contains(reqFloor)) {//does not contains request from that floor before
+				if(!assignLift.getDownReqFloorList().contains(reqFloor)) {//does not contains down request from that floor before
 					assignLift.getDownReqFloorList().add(reqFloor);
 				}
 				b.getFlrMap().get(reqf).setDownflag(true);
@@ -119,7 +127,7 @@ public class CMS{
 
 	public void operate(int curTime) {
 		int i=0;
-		System.out.printf("%nCurrent time: %s%n",curTime);
+		System.out.printf("%nCurrent time: %s%n",TimeConverter.fromStoTime(curTime));
 		for (Lift lift:liftList) {
 			System.out.printf("-----------------------------------%n");
 			System.out.printf("lift %s in %s/F (%s)%n",i,lift.getCurrentFloor(),curTime);

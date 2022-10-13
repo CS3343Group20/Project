@@ -14,7 +14,7 @@ public class Main {
 	public static void main(String[] args) throws ParseException {	
 		CMS cms= CMS.getInstance();
 		cms.createLift(120);
-		cms.createLift(120);
+		//cms.createLift(120);
 		String requestTime="";
         Simulator sim=new Simulator();
         ArrayList<Request> inputList=new ArrayList<>();

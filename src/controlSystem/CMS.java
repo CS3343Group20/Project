@@ -39,7 +39,7 @@ public class CMS{
 	public void setCurrentTime(int t) {time=t;}
 	public int getCurrentTime() {return time;}
 
-	public void assignClosest2(int reqf,int dir) {
+	public void assignClosest2(int reqf,int dir,int reqDir) {
 		//TODO check if any lift has request on that floor already, if yes then assign that lift
 		
 		int shortestDistance=Integer.MAX_VALUE;
@@ -54,7 +54,7 @@ public class CMS{
 				}
 			}
 			else {
-				int distance=lift.checkClosestFromPassenger(dir,reqf);
+				int distance=lift.checkClosestFromPassenger(dir,reqf,reqDir);
 				if(distance<shortestDistance) {
 					assignLift=lift;
 					shortestDistance=distance;

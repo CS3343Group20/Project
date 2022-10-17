@@ -70,4 +70,30 @@ public class Lift {
 	public int totalAcceptedReq() {
 		return (this.upfloorList.size()+this.downfloorList.size());
 	}
+	public int checkClosestFromPassenger(int dir, int reqf,int reqDir) {
+		int shortestDist=Integer.MAX_VALUE;
+		if(dir==1&&reqDir==0) {
+			int highest=0;
+			for (Passenger p:passengerList) {
+				if(p.getTargetFloor()>highest) {
+					highest=p.getTargetFloor();
+				}	
+			}
+			if (highest<reqf) {//if lift is going up and the highest flr passenger going is less than the down request
+				shortestDist=reqf-highest;
+			}
+		}
+		else if(dir==0 && reqDir==1){
+			int lowest=10000;
+			for (Passenger p:passengerList) {
+				if (p.getTargetFloor()<lowest) {
+					lowest=p.getTargetFloor();
+				}
+			}
+			if(lowest<shortestDist) {//if lift is going down and the lowest flr passenger going is higher than the up request
+				shortestDist=lowest-reqf;
+			}
+		}
+		return shortestDist;
+	}
 }

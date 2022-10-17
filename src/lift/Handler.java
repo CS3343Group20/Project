@@ -116,6 +116,7 @@ public class Handler {
 				lift.setDirection(1);
 				lift.setStatus(new Idle());
 				cms.setRunningLift(cms.getRunningLift()-1);
+				System.out.printf("arrived to 0/F, idling...%n");
 			}
 		}
 	}

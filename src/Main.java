@@ -50,7 +50,5 @@ public class Main {
         inputList.sort(new RequestComparator());
         //cms.getReqSys().printQueue();
         sim.StartSimulation(cms.getBuilding(),inputList);
-        
-       
     }
 }

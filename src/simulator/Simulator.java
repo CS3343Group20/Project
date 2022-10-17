@@ -37,11 +37,11 @@ public class Simulator {//userless now just ignore it
 				for (Map.Entry<Integer, Floor> flrMap: b.getFlrMap().entrySet()) {
 					Floor f=flrMap.getValue();
 					if (f.haveUpReq(currentTime)&&!f.getUpflag()) {//have request and not yet accepted by any lift
-						cms.assignClosest2(flrMap.getKey(), 1);
+						cms.assignClosest2(flrMap.getKey(), 1,1);
 						System.out.println("trigger up assign");
 					}
 					if (f.haveDownReq(currentTime)&&!f.getDownflag()) {
-						cms.assignClosest2(flrMap.getKey(), 0);
+						cms.assignClosest2(flrMap.getKey(), 0,0);
 						System.out.println("trigger down assign");
 					}
 				}

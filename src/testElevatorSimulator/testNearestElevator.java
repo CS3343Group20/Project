@@ -142,10 +142,25 @@ public class testNearestElevator {
 	}
 	
 	//---------
+	
+	//test Handler.java checkArriveToTarget() 
+		//not arrived
+		@Test
+		public void testCheckArriveT_1() {
+			Lift lift = new Lift(60);
+			Handler handler = new Handler(lift);
+			Passenger p = new Passenger(70, 1, 5);
+			lift.getPassengerList().add(p);
+			lift.setStatus(new Loaded());
+			handler.checkArriveToTarget(0);
+			assertEquals(1, lift.getPassengerList().size());
+		}
+		
+		
 	//test Handler.java checkArriveToTarget() 
 	//arrived
 	@Test
-	public void testCheckArriveT_1() {
+	public void testCheckArriveT_2() {
 		Lift lift = new Lift(120);
 		Handler handler = new Handler(lift);
 		Passenger p = new Passenger(50, 0, 1);
@@ -159,17 +174,7 @@ public class testNearestElevator {
 		assertEquals(0, lift.getPassengerList().size());
 	}
 	
-	//test Handler.java checkArriveToTarget() 
-	//not arrived
-	@Test
-	public void testCheckArriveT_2() {
-		Lift lift = new Lift(60);
-		Handler handler = new Handler(lift);
-		Passenger p = new Passenger(70, 1, 5);
-		lift.setStatus(new Loaded());
-		handler.checkArriveToTarget(0);
-		assertEquals(1, lift.getPassengerList().size());
-	}
+	
 	
 	//------
 	//test Handle.java curFloorHaveAccepedReq()
@@ -189,9 +194,11 @@ public class testNearestElevator {
 		Handler handler = new Handler(lift);
 		Passenger p = new Passenger(50, 0, 2);
 		Request r = new Request(p, 0);
-		RequestSystem rs = new RequestSystem(cms);
+		RequestSystem rs = cms.getReqSys();
 		rs.request(r);
 		assertEquals(true, handler.curFloorHaveRequest2(0));
+		cms.getBuilding().getFlrMap().get(0).getUpQueue().clear();
+		rs.getAllReq().clear();
 	}
 	
 	//test Handle.java curFloorHaveRequest2()
@@ -203,34 +210,148 @@ public class testNearestElevator {
 		Handler handler = new Handler(lift);
 		Passenger p = new Passenger(50, 1, 0);
 		Request r = new Request(p, 0);
-		RequestSystem rs = new RequestSystem(cms);
+		RequestSystem rs = cms.getReqSys();
 		rs.request(r);
-		lift.move();
-
-		assertEquals(true, handler.curFloorHaveRequest2(0));
+		assertEquals(true, handler.curFloorHaveRequest2(1));
+		cms.getBuilding().getFlrMap().get(1).getDownQueue().clear();
+		rs.getAllReq().clear();
 	}
+	//remarks: Floor.java addToUp/DownQueue are not necessary? I think we can delete them
 	
 	//test Handle.java curFloorHaveRequest2()
 	//no request
 	@Test
 	public void testCurFlrHvReq_3() {
-		CMS cms = CMS.getInstance();
 		Lift lift = new Lift(120);
 		Handler handler = new Handler(lift);
-		assertEquals(false, handler.curFloorHaveRequest2(7));
+		assertEquals(false, handler.curFloorHaveRequest2(0));
 	}
 	
 	
 	//-----
 	//test Handle.java handleCurrentFloor()
+	//have up request
+	
 	@Test
 	public void testHandleCF_1() {
+		class stubHandler extends Handler{
+
+			public stubHandler(Lift lift) {
+				super(lift);
+			}
+			
+			public boolean curFloorHaveRequest2(int f) {
+				return true;
+			}
+			
+		}
 		
+		CMS cms = CMS.getInstance();
+		Lift lift = new Lift(120);
+		stubHandler sh = new stubHandler(lift);
+		lift.getUpReqFloorList().add(0);
+		Passenger p = new Passenger(50, 0, 1);
+		Request r = new Request(p, 0);
+		RequestSystem rs = cms.getReqSys();
+		rs.request(r);
+		sh.handleCurrentFloor(0, 0);
+		assertEquals(0, rs.getAllReq().size());
+		assertEquals(1, lift.getPassengerList().size());
 		
+		rs.getAllReq().clear();
+		cms.getBuilding().getFlrMap().get(1).getUpQueue().clear();
+	}
+	
+	//test Handle.java handleCurrentFloor()
+	//have down request
+	
+	@Test
+	public void testHandleCF_2() {
+		class stubHandler extends Handler{
+
+			public stubHandler(Lift lift) {
+				super(lift);
+			}
+			
+			public boolean curFloorHaveRequest2(int f) {
+				return true;
+			}
+			
+		}
+		
+		CMS cms = CMS.getInstance();
+		Lift lift = new Lift(120);
+		stubHandler sh = new stubHandler(lift);
+		lift.getDownReqFloorList().add(3);
+		Passenger p = new Passenger(50, 3, 1);
+		Request r = new Request(p, 0);
+		RequestSystem rs = cms.getReqSys();
+		rs.request(r);
+		assertEquals(1, cms.getBuilding().getFlrMap().get(3).getDownQueue().size());
+		sh.handleCurrentFloor(3, 0);
+		
+		assertEquals(0, rs.getAllReq().size());
+		assertEquals(1, lift.getPassengerList().size());
+		
+		rs.getAllReq().clear();
+		cms.getBuilding().getFlrMap().get(3).getDownQueue().clear();
 	}
 	
 	
+	//test Handle.java handleCurrentFloor()
+	//have up request, but lift is going down with passenger
+	// not test now, next phrase
+	@Test
+	public void testHandleCF_3() {
+		
+	}
+		
+	//test Handle.java handleCurrentFloor()
+	//have down request, but lift is going up with passenger
+	// not test now, next phrase
+	@Test
+	public void testHandleCF_4() {
+		
+	}	
 	
+	//test Handle.java handleCurrentFloor()
+	//have up request
+	
+	@Test
+	public void testHandleCF_5() {
+		class stubHandler extends Handler{
+
+			public stubHandler(Lift lift) {
+				super(lift);
+			}
+			
+			public boolean curFloorHaveRequest2(int f) {
+				return true;
+			}
+			
+		}
+		
+		CMS cms = CMS.getInstance();
+		Lift lift = new Lift(40);
+		stubHandler sh = new stubHandler(lift);
+		lift.getUpReqFloorList().add(0);
+		Passenger p = new Passenger(50, 0, 1);
+		Request r = new Request(p, 0);
+		RequestSystem rs = cms.getReqSys();
+		rs.request(r);
+		sh.handleCurrentFloor(0, 0);
+		
+		assertEquals(1, rs.getAllReq().size());
+		assertEquals(0, lift.getPassengerList().size());
+		OverWeightException ex = assertThrows(OverWeightException.class, () -> sh.handleCurrentFloor(0, 0));
+		assertEquals("Ignore people 1 since overload%n", ex.getMessage());
+		
+		assertThrows(OverWeightException.class, () -> sh.handleCurrentFloor(0, 0));
+		
+		rs.getAllReq().clear();
+		cms.getBuilding().getFlrMap().get(1).getUpQueue().clear();
+	}
+
 	
 	
 	//CMS.java

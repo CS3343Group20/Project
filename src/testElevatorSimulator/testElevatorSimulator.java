@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.text.ParseException;
 import java.util.Iterator;
 
@@ -28,8 +30,11 @@ public class testElevatorSimulator {
 	public void testMain() throws ParseException, InsufficientArgumentException {
 		//System.setIn(new ByteArrayInputStream(("00:00:00 1 3 50"+"\n"+"-1").getBytes()));
 		System.setIn(new ByteArrayInputStream(("-1").getBytes()));
+		//ByteArrayOutputStream stream= new ByteArrayOutputStream();
+		//PrintStream pStream = new PrintStream(stream);
+		//System.setOut(pStream);
 		Main.main(null);
-
+		//assertEquals("lift created!\nlift created!\nEnter request time (hh:mm:ss)|current floor|target floor|weight:\n------------------Start simulation-----------------\n\nSimulation ends!", stream.toString());
 	}
 	
 	
@@ -391,6 +396,47 @@ public class testElevatorSimulator {
 		CMS cms = CMS.getInstance();
 		cms.createLift(120);
 		cms.createLift(120);
+		
+	}
+	
+	//---
+	//test CMS.java operate()
+	//idle
+	@Test
+	public void testOperate_1() {
+		String expect = "%nCurren time: 0:0:0 %n";
+		expect += "-----------------------------------%n";
+		expect+= "lift 0 in 0/F (0)%n";
+		expect+= "lift 0 is idling......";
+		
+		//ByteArrayOutputStream stream= new ByteArrayOutputStream();
+		//PrintStream pStream = new PrintStream(stream);
+		//System.setOut(pStream);
+		CMS cms=CMS.getInstance();
+		cms.createLift(120);
+		cms.operate(0);
+		//assertEquals(expect,stream.toString());
+		
+	}
+	
+	//test CMS.java operate()
+	//not idle
+	@Test
+	public void testOperate_2() {
+		String expect = "%nCurren time: 0:0:0 %n";
+		expect += "-----------------------------------%n";
+		expect+= "lift 0 in 0/F (0)%n";
+		//expect+= "lift 0 is idling......";
+		
+		//ByteArrayOutputStream stream= new ByteArrayOutputStream();
+		//PrintStream pStream = new PrintStream(stream);
+		//System.setOut(pStream);
+		CMS cms=CMS.getInstance();
+		cms.createLift(120);
+		//test fail
+		cms.getLiftList().get(0).setStatus(new Loaded());
+		cms.operate(0);
+		//assertEquals(expect,stream.toString());
 		
 	}
 	

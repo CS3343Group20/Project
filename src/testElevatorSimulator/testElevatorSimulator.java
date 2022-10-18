@@ -4,6 +4,10 @@ package testElevatorSimulator;
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.text.ParseException;
 import java.util.Iterator;
 
 import lift.*;
@@ -18,7 +22,21 @@ import time.*;
 
 
 public class testElevatorSimulator {
+	//Main.java
+	//remark: can't find how to have multiple input
+	@Test
+	public void testMain() throws ParseException, InsufficientArgumentException {
+		//System.setIn(new ByteArrayInputStream(("00:00:00 1 3 50"+"\n"+"-1").getBytes()));
+		System.setIn(new ByteArrayInputStream(("-1").getBytes()));
+		Main.main(null);
+
+	}
+	
+	
+	
+
 	//Lift.java
+	//--------------------------------------------------
 	//test Lift.java checkClosestFromPassenger()
 	//lift up, req down, exist highest reqflr < request flr
 	@Test
@@ -322,8 +340,7 @@ public class testElevatorSimulator {
 	}	
 	
 	//test Handle.java handleCurrentFloor()
-	//have up request
-	
+	//have request but overWeightexception
 	@Test
 	public void testHandleCF_5() {
 		class stubHandler extends Handler{
@@ -358,7 +375,12 @@ public class testElevatorSimulator {
 
 	}
 
-	
+	//test Handle.java handleCurrentFloor()
+	//exception
+	//remark: no idea how to trigger the exception
+	public void testHandleCF_6() {
+		
+	}
 	
 	//CMS.java
 	//------------------------------

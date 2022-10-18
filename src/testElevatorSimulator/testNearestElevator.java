@@ -1,12 +1,9 @@
-package testNearestElevator;
+package testElevatorSimulator;
 
 
 import static org.junit.Assert.*;
-
-import java.util.Optional;
-
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+
 
 import lift.*;
 import controlSystem.*;
@@ -78,7 +75,7 @@ public class testNearestElevator {
 		Handler handler = new Handler(lift);
 		Passenger p = new Passenger(40, 2, 5);
 		handler.pickupPassenger(p);
-		
+		assertEquals(1, lift.getPassengerList().size());
 	}
 	
 	//test Handler.java pickupPassenger() - weight == capacity
@@ -88,7 +85,7 @@ public class testNearestElevator {
 		Handler handler = new Handler(lift);
 		Passenger p = new Passenger(60, 2, 5);
 		handler.pickupPassenger(p);
-		
+		assertEquals(1, lift.getPassengerList().size());
 	}
 	
 	//test Handler.java pickupPassenger() - OverWeightEx
@@ -98,7 +95,7 @@ public class testNearestElevator {
 		Handler handler = new Handler(lift);
 		Passenger p = new Passenger(70, 2, 5);
 		
-		Assertions.assertThrows(OverWeightException.class, () -> handler.pickupPassenger(p));
+		assertThrows(OverWeightException.class, () -> handler.pickupPassenger(p));
 	}
 	
 	//------------------------------

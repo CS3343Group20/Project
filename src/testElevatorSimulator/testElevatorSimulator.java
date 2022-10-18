@@ -16,7 +16,7 @@ import simulator.*;
 import time.*;
 
 
-public class testNearestElevator {
+public class testElevatorSimulator {
 	//Lift.java
 	//test Lift.java checkClosestFromPassenger()
 	//lift up, req down, exist highest reqflr < request flr

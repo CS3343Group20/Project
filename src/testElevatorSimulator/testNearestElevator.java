@@ -3,14 +3,15 @@ package testElevatorSimulator;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-
+import java.util.Iterator;
 
 import lift.*;
 import controlSystem.*;
 import exceptions.*;
-
+import lift.loadState.*;
 
 public class testNearestElevator {
+	//Lift.java
 	//test Lift.java checkClosestFromPassenger()
 	//lift up, req down, exist highest reqflr < request flr
 	@Test
@@ -67,6 +68,42 @@ public class testNearestElevator {
 		
 	}
 	
+	//test Lift.java move()
+	//going up (test fail cannot get in the 2nd if)
+	@Test
+	public void testMove_1() {
+		Lift lift = new Lift(120);
+		lift.setStatus(new Loaded());
+		Passenger p = new Passenger(50, 0, 1);
+		lift.getPassengerList().add(p);
+		
+		lift.move();
+		assertEquals(1, lift.getCurrentFloor());
+		
+	}
+	
+	//test Lift.java move()
+	//going down (test fail cannot get in the 2nd if)
+	@Test
+	public void testMove_2() {
+			
+		Lift lift = new Lift(120);
+		lift.setStatus(new Loaded());
+		lift.setDirection(0);
+		Passenger p = new Passenger(50, 1, 0);	
+		lift.getPassengerList().add(p);
+		
+		lift.move();
+		assertEquals(-1, lift.getCurrentFloor());
+		
+	}
+	
+	
+	
+	
+	
+	
+	//Handle.java
 	//------------------------------
 	//test Handler.java pickupPassenger() - normal
 	@Test
@@ -98,6 +135,42 @@ public class testNearestElevator {
 		assertThrows(OverWeightException.class, () -> handler.pickupPassenger(p));
 	}
 	
+	//---------
+	//test Handler.java checkArriveToTarget() 
+	//arrived
+	@Test
+	public void testCheckArriveT_1() {
+		Lift lift = new Lift(120);
+		Handler handler = new Handler(lift);
+		Passenger p = new Passenger(50, 0, 1);
+		
+		lift.getPassengerList().add(p);
+		lift.setStatus(new Loaded());
+		lift.setLoadWeight(50);
+		//move can't run
+		lift.move();
+		handler.checkArriveToTarget(0);
+		assertEquals(0, lift.getPassengerList().size());
+	}
+	
+	//test Handler.java checkArriveToTarget() 
+	//not arrived
+	@Test
+	public void testCheckArriveT_2() {
+		Lift lift = new Lift(60);
+		Handler handler = new Handler(lift);
+		Passenger p = new Passenger(70, 1, 5);
+		lift.setStatus(new Loaded());
+		handler.checkArriveToTarget(0);
+		assertEquals(1, lift.getPassengerList().size());
+	}
+	
+	
+	
+	
+	
+	
+	//CMS.java
 	//------------------------------
 	//test CMS.java assignClosest2()
 	//

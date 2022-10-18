@@ -2,6 +2,7 @@ package testElevatorSimulator;
 
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import org.junit.Test;
 import java.util.Iterator;
 
@@ -124,21 +125,27 @@ public class testElevatorSimulator {
 	//test Handler.java pickupPassenger() - weight == capacity
 	@Test
 	public void testPickupP_2() throws Exception {
+		
 		Lift lift = new Lift(60);
 		Handler handler = new Handler(lift);
 		Passenger p = new Passenger(60, 2, 5);
 		handler.pickupPassenger(p);
 		assertEquals(1, lift.getPassengerList().size());
+		
 	}
 	
 	//test Handler.java pickupPassenger() - OverWeightEx
 	@Test
-	public void testPickupP_3() throws Exception {
+	public void testPickupP_3() throws OverWeightException {
 		Lift lift = new Lift(60);
 		Handler handler = new Handler(lift);
 		Passenger p = new Passenger(70, 2, 5);
 		
-		assertThrows(OverWeightException.class, () -> handler.pickupPassenger(p));
+		OverWeightException ex = assertThrows(OverWeightException.class, ()->{
+			handler.pickupPassenger(p);
+		});
+		
+		assertEquals("Lift will overload, reject new passenger!", ex.getMessage());
 	}
 	
 	//---------
@@ -341,15 +348,14 @@ public class testElevatorSimulator {
 		rs.request(r);
 		sh.handleCurrentFloor(0, 0);
 		
+		assertDoesNotThrow(() -> {sh.handleCurrentFloor(0, 0);});
+
+		assertEquals("full", lift.getStatus());
 		assertEquals(1, rs.getAllReq().size());
 		assertEquals(0, lift.getPassengerList().size());
-		OverWeightException ex = assertThrows(OverWeightException.class, () -> sh.handleCurrentFloor(0, 0));
-		assertEquals("Ignore people 1 since overload%n", ex.getMessage());
-		
-		assertThrows(OverWeightException.class, () -> sh.handleCurrentFloor(0, 0));
-		
 		rs.getAllReq().clear();
-		cms.getBuilding().getFlrMap().get(1).getUpQueue().clear();
+		cms.getBuilding().getFlrMap().get(1).getUpQueue().clear();		
+
 	}
 
 	

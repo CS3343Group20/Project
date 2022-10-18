@@ -1,5 +1,6 @@
 package main;
 import java.text.ParseException;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,12 +11,15 @@ import controlSystem.RequestComparator;
 import exceptions.timeException.TimeFormatException;
 import simulator.Simulator;
 import time.TimeConverter;
+
+//Exceptions
+import exceptions.InsufficientArgumentException;
 public class Main {
 	
-	public static void main(String[] args) throws ParseException {	
-		CMS cms= CMS.getInstance();
-		cms.createLift(120);
-		cms.createLift(120);
+	public static void main(String[] args) throws ParseException, InsufficientArgumentException {	
+		CMS cms= CMS.getInstance(); // create a cms instance
+		cms.createLift(120); // create a lift with 120 KG capacity
+		cms.createLift(120); // create a lift with 120 KG capacity
 		String requestTime="";
         Simulator sim=new Simulator();
         ArrayList<Request> inputList=new ArrayList<>();
@@ -26,15 +30,19 @@ public class Main {
         	System.out.println("Enter request time (hh:mm:ss)|current floor|target floor|weight: ");
         	inputcmd = input.nextLine().split(" ");
         	requestTime = inputcmd[0];
-        	if (requestTime.equals("-1")) {
+        	if (requestTime.equals("-1")) { //input -1 to terminate input
         		break;
+        	}
+        	if (inputcmd.length < 4) {        		
+        		System.out.println("Insufficient command arguments. Please try again.");
+        		continue;
         	}
         	try {
         		parseInTime=TimeConverter.ConvertTime(requestTime);
 			} catch (TimeFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				System.out.println("Input error ,please try again");
+				System.out.println("Input error ,please try again.");
 				continue;
 			}
         	

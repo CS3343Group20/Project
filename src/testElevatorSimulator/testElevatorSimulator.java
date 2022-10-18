@@ -198,7 +198,6 @@ public class testElevatorSimulator {
 		lift.getPassengerList().add(p);
 		lift.setStatus(new Loaded());
 		lift.setLoadWeight(50);
-		//move can't run
 		lift.move();
 		handler.checkArriveToTarget(0);
 		assertEquals(0, lift.getPassengerList().size());
@@ -387,6 +386,9 @@ public class testElevatorSimulator {
 		
 	}
 	
+	
+	
+	
 	//CMS.java
 	//------------------------------
 	//test CMS.java assignClosest2()
@@ -440,4 +442,163 @@ public class testElevatorSimulator {
 		
 	}
 	
+
+	//TimeConverter.java
+	//------------------------------
+	//test TimeConverter.java ConvertTime()
+	//too much parameters
+	@Test
+	public void testConTime_1() throws TimeFormatException {
+		TimeConverter t = new TimeConverter();
+		String time = "00:00:00:00";
+		TimeFormatException ex = assertThrows(TimeFormatException.class, ()->{
+			t.ConvertTime(time);
+		});
+		assertEquals("Too much parameters!",ex.getMessage());
+	}
+	
+	//test TimeConverter.java ConvertTime()
+	//too less parameters
+	@Test
+	public void testConTime_2() throws TimeFormatException {
+		TimeConverter t = new TimeConverter();
+		String time = "00:00";
+		TimeFormatException ex = assertThrows(TimeFormatException.class, ()->{
+			t.ConvertTime(time);
+		});
+		assertEquals("Too less parameters!",ex.getMessage());
+	}
+	
+	//test TimeConverter.java ConvertTime()
+	//normal
+	@Test
+	public void testConTime_3() throws TimeFormatException {
+		
+		TimeConverter t = new TimeConverter();
+		String time = "00:00:00";
+		int result = t.ConvertTime(time);
+		assertEquals(0,result);
+	}
+	
+	//test TimeConverter.java ConvertTime()
+	//wrong format
+	//remark: no idea how to trigger this exception
+	@Test
+	public void testConTime_4() throws TimeFormatException {
+		TimeConverter t = new TimeConverter();
+		String time = "00:00:a";
+		//TimeFormatException ex = assertThrows(TimeFormatException.class, ()->{
+			//t.ConvertTime(time);
+		//});
+		//assertEquals("Too less parameters!",ex.getMessage());
+	}
+	
+	
+	
+	//TimeExtracter.java
+	//------------------------------
+	//test TimeExtracter.java extractHour()
+	//normal
+	@Test
+	public void testExHour_1() throws HourException {
+		TimeExtracter t = new TimeExtracter();
+		String time = "24";
+		int result = t.extractHour(time);
+		assertEquals(24,result);
+	}
+	
+	//test TimeExtracter.java extractHour()
+	//> 24
+	@Test
+	public void testExHour_2() throws HourException {
+		TimeExtracter t = new TimeExtracter();
+		String time = "25";
+		HourException ex = assertThrows(HourException.class, ()->{
+			t.extractHour(time);
+		});
+		assertEquals("Hour incorrect",ex.getMessage());
+	}
+	
+	//test TimeExtracter.java extractHour()
+	//<0
+	@Test
+	public void testExHour_3() throws HourException {
+		TimeExtracter t = new TimeExtracter();
+		String time = "-1";
+		HourException ex = assertThrows(HourException.class, ()->{
+			t.extractHour(time);
+		});
+		assertEquals("Hour incorrect",ex.getMessage());
+	}
+	
+	
+	//------
+	//test TimeExtracter.java extractMinute()
+	//normal
+	@Test
+	public void testExMinute_1() throws MinuteException {
+		TimeExtracter t = new TimeExtracter();
+		String time = "60";
+		int result = t.extractMinute(time);
+		assertEquals(60,result);
+	}
+	
+	//test TimeExtracter.java extractMinute()
+	//> 60
+	@Test
+	public void testExMinute_2() throws MinuteException {
+		TimeExtracter t = new TimeExtracter();
+		String time = "61";
+		MinuteException ex = assertThrows(MinuteException.class, ()->{
+			t.extractMinute(time);
+		});
+		assertEquals("Minute incorrect",ex.getMessage());
+	}
+	
+	//test TimeExtracter.java extractMinute()
+	//<0
+	@Test
+	public void testExMinute_3() throws MinuteException {
+		TimeExtracter t = new TimeExtracter();
+		String time = "-1";
+		MinuteException ex = assertThrows(MinuteException.class, ()->{
+			t.extractMinute(time);
+		});
+		assertEquals("Minute incorrect",ex.getMessage());
+	}
+	
+	//------
+	//test TimeExtracter.java extractSecond()
+	//normal
+	@Test
+	public void testExSecond_1() throws SecondException {
+		TimeExtracter t = new TimeExtracter();
+		String time = "60";
+		int result = t.extractSecond(time);
+		assertEquals(60,result);
+	}
+	
+	//test TimeExtracter.java extractSecond()
+	//> 60
+	@Test
+	public void testExSecond_2() throws SecondException {
+		TimeExtracter t = new TimeExtracter();
+		String time = "61";
+		SecondException ex = assertThrows(SecondException.class, ()->{
+			t.extractSecond(time);
+		});
+		assertEquals("Second incorrect",ex.getMessage());
+	}
+	
+	//test TimeExtracter.java extractSecond()
+	//<0
+	@Test
+	public void testExSecond_3() throws SecondException {
+		TimeExtracter t = new TimeExtracter();
+		String time = "-1";
+		SecondException ex = assertThrows(SecondException.class, ()->{
+			t.extractSecond(time);
+		});
+		assertEquals("Second incorrect",ex.getMessage());
+	}
 }

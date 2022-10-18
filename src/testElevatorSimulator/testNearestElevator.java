@@ -9,6 +9,12 @@ import lift.*;
 import controlSystem.*;
 import exceptions.*;
 import lift.loadState.*;
+import building.*;
+import exceptions.timeException.*;
+import main.*;
+import simulator.*;
+import time.*;
+
 
 public class testNearestElevator {
 	//Lift.java
@@ -165,6 +171,63 @@ public class testNearestElevator {
 		assertEquals(1, lift.getPassengerList().size());
 	}
 	
+	//------
+	//test Handle.java curFloorHaveAccepedReq()
+	//What is the use of curFloorHaveAccepedReq()
+	@Test
+	public void testCurHvAcpReq() {
+
+	}
+	
+	//-----
+	//test Handle.java curFloorHaveRequest2()
+	//have up request
+	@Test
+	public void testCurFlrHvReq_1() {
+		CMS cms = CMS.getInstance();
+		Lift lift = new Lift(120);
+		Handler handler = new Handler(lift);
+		Passenger p = new Passenger(50, 0, 2);
+		Request r = new Request(p, 0);
+		RequestSystem rs = new RequestSystem(cms);
+		rs.request(r);
+		assertEquals(true, handler.curFloorHaveRequest2(0));
+	}
+	
+	//test Handle.java curFloorHaveRequest2()
+	//have down request
+	@Test
+	public void testCurFlrHvReq_2() {
+		CMS cms = CMS.getInstance();
+		Lift lift = new Lift(120);
+		Handler handler = new Handler(lift);
+		Passenger p = new Passenger(50, 1, 0);
+		Request r = new Request(p, 0);
+		RequestSystem rs = new RequestSystem(cms);
+		rs.request(r);
+		lift.move();
+
+		assertEquals(true, handler.curFloorHaveRequest2(0));
+	}
+	
+	//test Handle.java curFloorHaveRequest2()
+	//no request
+	@Test
+	public void testCurFlrHvReq_3() {
+		CMS cms = CMS.getInstance();
+		Lift lift = new Lift(120);
+		Handler handler = new Handler(lift);
+		assertEquals(false, handler.curFloorHaveRequest2(7));
+	}
+	
+	
+	//-----
+	//test Handle.java handleCurrentFloor()
+	@Test
+	public void testHandleCF_1() {
+		
+		
+	}
 	
 	
 	

@@ -7,8 +7,8 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Iterator;
 
@@ -24,17 +24,44 @@ import time.*;
 
 
 public class testElevatorSimulator {
+	//pre-set for System.out
+	PrintStream printStream;
+	ByteArrayOutputStream bos;
+
+	private void setOutput() throws Exception {
+		printStream = System.out;
+		bos = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(bos));
+	}
+
+	private String getOutput() { // throws Exception
+		System.setOut(printStream);
+		return bos.toString().trim();
+	}
+	
+	private void clean() {
+		CMS cms = CMS.getInstance();
+		RequestSystem rs = cms.getReqSys();
+		rs.getAllReq().clear();
+		cms.getBuilding().getFlrMap().get(1).getUpQueue().clear();
+		cms.getBuilding().getFlrMap().get(1).getDownQueue().clear();
+	}
+	
+	//------------------Start Testing----------------------
+	//-----------------------------------------------------
+	
 	//Main.java
 	//remark: can't find how to have multiple input
 	@Test
-	public void testMain() throws ParseException, InsufficientArgumentException {
-		//System.setIn(new ByteArrayInputStream(("00:00:00 1 3 50"+"\n"+"-1").getBytes()));
-		System.setIn(new ByteArrayInputStream(("-1").getBytes()));
-		//ByteArrayOutputStream stream= new ByteArrayOutputStream();
-		//PrintStream pStream = new PrintStream(stream);
-		//System.setOut(pStream);
-		Main.main(null);
-		//assertEquals("lift created!\nlift created!\nEnter request time (hh:mm:ss)|current floor|target floor|weight:\n------------------Start simulation-----------------\n\nSimulation ends!", stream.toString());
+	public void testMain() throws Exception {
+		setOutput();
+		InputStream stdin = System.in;
+		//System.setIn(new ByteArrayInputStream("00:00:00 1 3 50".getBytes()));
+		System.setIn(new ByteArrayInputStream("-1".getBytes()));
+		Main.main(new String[0]);	
+		System.setIn(stdin);
+
+		//assertEquals("lift created!lift created!Enter request time (hh:mm:ss)|current floor|target floor|weight:------------------Start simulation-----------------Simulation ends!", getOutput());
 	}
 	
 	
@@ -226,8 +253,7 @@ public class testElevatorSimulator {
 		RequestSystem rs = cms.getReqSys();
 		rs.request(r);
 		assertEquals(true, handler.curFloorHaveRequest2(0));
-		cms.getBuilding().getFlrMap().get(0).getUpQueue().clear();
-		rs.getAllReq().clear();
+		clean();
 	}
 	
 	//test Handle.java curFloorHaveRequest2()
@@ -242,8 +268,7 @@ public class testElevatorSimulator {
 		RequestSystem rs = cms.getReqSys();
 		rs.request(r);
 		assertEquals(true, handler.curFloorHaveRequest2(1));
-		cms.getBuilding().getFlrMap().get(1).getDownQueue().clear();
-		rs.getAllReq().clear();
+		clean();
 	}
 	//remarks: Floor.java addToUp/DownQueue are not necessary? I think we can delete them
 	
@@ -287,8 +312,7 @@ public class testElevatorSimulator {
 		assertEquals(0, rs.getAllReq().size());
 		assertEquals(1, lift.getPassengerList().size());
 		
-		rs.getAllReq().clear();
-		cms.getBuilding().getFlrMap().get(1).getUpQueue().clear();
+		clean();
 	}
 	
 	//test Handle.java handleCurrentFloor()
@@ -322,8 +346,7 @@ public class testElevatorSimulator {
 		assertEquals(0, rs.getAllReq().size());
 		assertEquals(1, lift.getPassengerList().size());
 		
-		rs.getAllReq().clear();
-		cms.getBuilding().getFlrMap().get(3).getDownQueue().clear();
+		clean();
 	}
 	
 	
@@ -374,8 +397,7 @@ public class testElevatorSimulator {
 		assertEquals("full", lift.getStatus());
 		assertEquals(1, rs.getAllReq().size());
 		assertEquals(0, lift.getPassengerList().size());
-		rs.getAllReq().clear();
-		cms.getBuilding().getFlrMap().get(1).getUpQueue().clear();		
+				
 
 	}
 
@@ -394,7 +416,8 @@ public class testElevatorSimulator {
 	//test CMS.java assignClosest2()
 	//
 	@Test
-	public void testAssignC2_1() {
+	public void testAssignC2_1() throws Exception {
+		setOutput();
 		CMS cms = CMS.getInstance();
 		cms.createLift(120);
 		cms.createLift(120);
@@ -405,40 +428,37 @@ public class testElevatorSimulator {
 	//test CMS.java operate()
 	//idle
 	@Test
-	public void testOperate_1() {
-		String expect = "%nCurren time: 0:0:0 %n";
-		expect += "-----------------------------------%n";
-		expect+= "lift 0 in 0/F (0)%n";
+	public void testOperate_1() throws Exception {
+		setOutput();
+		String expect = "Curren time: 0:0:0 ";
+		expect += "-----------------------------------";
+		expect+= "lift 0 in 0/F (0)";
 		expect+= "lift 0 is idling......";
 		
-		//ByteArrayOutputStream stream= new ByteArrayOutputStream();
-		//PrintStream pStream = new PrintStream(stream);
-		//System.setOut(pStream);
 		CMS cms=CMS.getInstance();
 		cms.createLift(120);
 		cms.operate(0);
-		//assertEquals(expect,stream.toString());
+		//assertEquals(expect,getOutput());
 		
 	}
 	
 	//test CMS.java operate()
 	//not idle
 	@Test
-	public void testOperate_2() {
-		String expect = "%nCurren time: 0:0:0 %n";
-		expect += "-----------------------------------%n";
-		expect+= "lift 0 in 0/F (0)%n";
-		//expect+= "lift 0 is idling......";
+	public void testOperate_2() throws Exception {
+		setOutput();
+		String expect = "Curren time: 0:0:0 ";
+		expect += "-----------------------------------";
+		expect+= "lift 0 in 0/F (0)";
+		expect+= "lift 0 is idling......";
 		
-		//ByteArrayOutputStream stream= new ByteArrayOutputStream();
-		//PrintStream pStream = new PrintStream(stream);
-		//System.setOut(pStream);
+		
 		CMS cms=CMS.getInstance();
 		cms.createLift(120);
 		//test fail
 		cms.getLiftList().get(0).setStatus(new Loaded());
 		cms.operate(0);
-		//assertEquals(expect,stream.toString());
+		//assertEquals(expect,getOutput());
 		
 	}
 	

@@ -46,6 +46,7 @@ public class CMS{
 		Lift assignLift=null;
 		int reqFloor=reqf;
 		for (Lift lift:liftList) {
+			// if status ok, same dir, not passed
 			if (checkAvailablity2(lift,dir,reqf)) {
 				int distance= calculateDistance2(lift,reqf);
 				if(distance<shortestDistance) {
@@ -150,5 +151,10 @@ public class CMS{
 	}
 	public Building getBuilding() {
 		return b;
+	}
+	
+	public List<Lift> getLiftList(){
+		return liftList;
+		
 	}
 }

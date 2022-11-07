@@ -40,47 +40,17 @@ public class Handler {
 		itr.remove();
 		System.out.printf("lift %s dropped Passenger!%n",i);
 	}
-//	public boolean curFloorHaveRequest(int f) {
-//		if(reqSys.getEachFloorReq().get(f)==null) {
-//			return false;
-//		}	
-//		return true;
-//	}
+
 	public boolean curFloorHaveAcceptedReq(int f) {
 		return (lift.getUpReqFloorList().contains(f)||lift.getDownReqFloorList().contains(f));
 	}
 	public boolean curFloorHaveRequest2(int f) {
-		if(cms.getBuilding().getFlrMap().get(f).haveUpReq()||cms.getBuilding().getFlrMap().get(f).haveDownReq()) {
+		if(cms.flrHaveRequest(f)) {
 			return true;
 		}	
 		return false;
 	}
-//	public void handleCurrentFloor(int f,int curTime) {
-//		if (curFloorHaveRequest(f)) {
-//			Iterator<Request> iterator=reqSys.getEachFloorReq().get(f).iterator();
-//			while(iterator.hasNext()){
-//				Request r =iterator.next();
-//				if(r.getRequestTime()<=curTime&&r.getPassenger().getDirection()==lift.getDirection()) {
-//					try {
-//						pickupPassenger(r.getPassenger());
-//						reqSys.getAllReq().remove(r);
-//						iterator.remove();
-//						System.out.println("Loaded people at"+lift.getCurrentFloor()+"F");
-//					} catch (OverWeightException e) {
-//						System.out.println("Ignore this people since overload");
-//						lift.setStatus(new Full());
-//						break;
-//					}
-//					catch (Exception e) {
-//						e.printStackTrace();
-//						break;
-//					}
-//				}
-//			}
-//		}
-//		lift.getReqFloorList().remove((Integer) f);
-//		checkArriveToTarget();
-//	}
+
 	public void checkArriveToTarget(int i) {
 		Iterator<Passenger> iterator=lift.getPassengerList().iterator();
 		while(iterator.hasNext()){
@@ -97,7 +67,7 @@ public class Handler {
 					lift.setDirection(0);
 				}
 			}
-			else if(lift.totalAcceptedReq()==0&&lift.getPassengerList().size()>0) {
+			else if(lift.totalAcceptedReq()==0&&lift.getPassengerList().size()>0) {//still have passenger in lift
 				int dirflag=0;
 				for (Passenger p:lift.getPassengerList()) {
 					if (p.getDirection()==1) {
@@ -107,12 +77,12 @@ public class Handler {
 				}
 				lift.setDirection(dirflag);	
 			}
-			else if(lift.getUpReqFloorList().size()==0&&lift.getDownReqFloorList().size()>0&&lift.isEmpty()) {
-				if(lift.getCurrentFloor()>lift.getDownReqFloorList().get(0)) {
+			else if(lift.getUpReqFloorList().size()==0&&lift.getDownReqFloorList().size()>0&&lift.isEmpty()) {//accepted request to go down(not packed passenger yet)
+				if(lift.getCurrentFloor()>lift.getDownReqFloorList().get(0)) {//if lift not arrived to target floor yet
 					lift.setDirection(0);
 				}
 			}
-			if(lift.getCurrentFloor()==0&&lift.isEmpty()&&lift.totalAcceptedReq()==0) {
+			if(lift.getCurrentFloor()==0&&lift.isEmpty()&&lift.totalAcceptedReq()==0) {//reset lift status
 				lift.setDirection(1);
 				lift.setStatus(new Idle());
 				cms.setRunningLift(cms.getRunningLift()-1);
@@ -120,7 +90,7 @@ public class Handler {
 			}
 		}
 	}
-	public void handleCurrentFloor(int f,int index) {//testing
+	public void handleCurrentFloor(int f,int index) {//index is lift no.
 		if (curFloorHaveRequest2(f)) {
 			Iterator<Request> iterator=null;
 			int dirflag=-1;

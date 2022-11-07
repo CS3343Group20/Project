@@ -51,6 +51,9 @@ public class Floor {
 	}
 	public ArrayList<Request> getUpQueue(){return goUpList;}
 	public ArrayList<Request> getDownQueue(){return goDownList;}
+	public boolean haveReq() {
+		return haveUpReq()||haveDownReq();
+	}
 	public boolean haveUpReq() {
 		return !goUpList.isEmpty();
 	}

@@ -16,7 +16,7 @@ public class Lift {
 	private Handler handler;
 	private Status status;
 	private ArrayList<Passenger> passengerList;
-	private ArrayList<Integer> upfloorList;//show request floors that are accepted by current lift
+	private ArrayList<Integer> reqGoUpList;//show request floors that are accepted by current lift
 	private ArrayList<Integer> downfloorList;
 	public Lift(int capacity) {
 		direction=1;
@@ -26,7 +26,7 @@ public class Lift {
 		handler=new Handler(this);
 		status = new Idle();
 		passengerList = new ArrayList<Passenger>();
-		upfloorList = new ArrayList<Integer>();
+		reqGoUpList = new ArrayList<Integer>();
 		downfloorList = new ArrayList<Integer>();
 		this.capacity=capacity;
 	}
@@ -42,7 +42,7 @@ public class Lift {
 		loadWeight=weight;
 	}
 	public ArrayList<Passenger> getPassengerList() {return passengerList;}
-	public ArrayList<Integer> getUpReqFloorList(){return upfloorList;}
+	public ArrayList<Integer> getUpReqFloorList(){return reqGoUpList;}
 	public ArrayList<Integer> getDownReqFloorList(){return downfloorList;}
 	public Handler getHandler() {return handler;}
 	
@@ -68,12 +68,12 @@ public class Lift {
 	}
 	public int getReqDir() {return requestDir;}
 	public int totalAcceptedReq() {
-		return (this.upfloorList.size()+this.downfloorList.size());
+		return (this.reqGoUpList.size()+this.downfloorList.size());
 	}
 	public int checkClosestFromPassenger(int dir, int reqf,int reqDir) {
 		int shortestDist=Integer.MAX_VALUE;
-		if(dir==1&&reqDir==0) {
-			int highest=0;
+		if(dir==1&&reqDir==0) {//if lift is going up but req is going down
+			int highest=0;//initialise lowest target floor in passengerList
 			for (Passenger p:passengerList) {
 				if(p.getTargetFloor()>highest) {
 					highest=p.getTargetFloor();
@@ -82,9 +82,12 @@ public class Lift {
 			if (highest<reqf) {//if lift is going up and the highest flr passenger going is less than the down request
 				shortestDist=reqf-highest;
 			}
+			else if(highest>reqf) {
+				shortestDist=highest-reqf;
+			}
 		}
-		else if(dir==0 && reqDir==1){
-			int lowest=10000;
+		else if(dir==0 && reqDir==1){//if lift is going down but req is going up
+			int lowest=Integer.MAX_VALUE;//initialise highest target floor in passengerList
 			for (Passenger p:passengerList) {
 				if (p.getTargetFloor()<lowest) {
 					lowest=p.getTargetFloor();
@@ -93,7 +96,19 @@ public class Lift {
 			if(lowest<shortestDist) {//if lift is going down and the lowest flr passenger going is higher than the up request
 				shortestDist=lowest-reqf;
 			}
+			else if (lowest>shortestDist) {
+				shortestDist=reqf-lowest;
+			}
 		}
 		return shortestDist;
+	}
+	public boolean haveReqAccepted() {
+		return this.totalAcceptedReq()>0;
+	}
+	public boolean haveReqGoUp() {
+		return reqGoUpList.size()>0;
+	}
+	public boolean haveReqGoDown() {
+		return downfloorList.size()>0;
 	}
 }

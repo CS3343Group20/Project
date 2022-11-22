@@ -18,8 +18,8 @@ public class Main {
 	
 	public static void main(String[] args) throws ParseException, InsufficientArgumentException {	
 		CMS cms= CMS.getInstance(); // create a cms instance
-		cms.createLift(120); // create a lift with 120 KG capacity
-		cms.createLift(120); // create a lift with 120 KG capacity
+		cms.createLift(1000); // create a lift with 1000 KG capacity
+		cms.createLift(1000); // create a lift with 1000 KG capacity
 		String requestTime="";
         Simulator sim=new Simulator();
         ArrayList<Request> inputList=new ArrayList<>();

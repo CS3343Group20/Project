@@ -47,15 +47,15 @@ public class CMS{
 		int reqFloor=reqf;
 		for (Lift lift:liftList) {
 			// if status ok, same dir, not passed
-			if (checkAvailablity2(lift,dir,reqf)) {
+			if (checkAvailablity2(lift,dir,reqf)) {//check if current lift is able to pick up the passenger in req flr
 				int distance= calculateDistance2(lift,reqf);
-				if(distance<shortestDistance) {
+				if(distance<shortestDistance) {//if calculated result is smaller than shortest dis, assign the lift and update shortest dis
 					assignLift=lift;
 					shortestDistance=distance;
 				}
 			}
 			else {
-				int distance=lift.checkClosestFromPassenger(dir,reqf,reqDir);
+				int distance=lift.checkClosestFromPassenger(dir,reqf,reqDir);//check whether the lift will be closest after finishing the current travel
 				if(distance<shortestDistance) {
 					assignLift=lift;
 					shortestDistance=distance;
@@ -125,20 +125,23 @@ public class CMS{
 		else 
 			return true;
 	}
+	public boolean flrHaveRequest(int f) {
+		return this.b.getFlrMap().get(f).haveReq();
+	}
 
 	public void operate(int curTime) {
 		int i=0;
 		System.out.printf("%nCurrent time: %s%n",TimeConverter.fromStoTime(curTime));
-		for (Lift lift:liftList) {
+		for (Lift lift:liftList) {//operate each lift
 			System.out.printf("-----------------------------------%n");
-			System.out.printf("lift %s in %s/F (%s)%n",i,lift.getCurrentFloor(),curTime);
-			lift.getHandler().handleCurrentFloor(lift.getCurrentFloor(),i);
-			lift.move();//directon pre handle
+			System.out.printf("lift %s in %s/F (%s)%n",i,lift.getCurrentFloor(),TimeConverter.fromStoTime(curTime));
+			lift.getHandler().handleCurrentFloor(lift.getCurrentFloor(),i);//handle all req & passenger on cur flr
+			lift.move();//directon handle
 			if (lift.getStatus().equals("idle")) {
 				System.out.printf("lift %s is idling......%n",i);
 			}
 			else
-				System.out.printf("lift %s moving to %s/F (%s)%n",i,lift.getCurrentFloor(),curTime);
+				System.out.printf("lift %s moving to %s/F (%s)%n",i,lift.getCurrentFloor(),TimeConverter.fromStoTime(curTime));
 			i++;
 		}
 	}

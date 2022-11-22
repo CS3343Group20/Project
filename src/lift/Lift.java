@@ -16,7 +16,7 @@ public class Lift {
 	private Handler handler;
 	private Status status;
 	private ArrayList<Passenger> passengerList;
-	private ArrayList<Integer> upfloorList;//show request floors that are accepted by current lift
+	private ArrayList<Integer> reqGoUpList;//show request floors that are accepted by current lift
 	private ArrayList<Integer> downfloorList;
 	public Lift(int capacity) {
 		direction=1;
@@ -26,7 +26,7 @@ public class Lift {
 		handler=new Handler(this);
 		status = new Idle();
 		passengerList = new ArrayList<Passenger>();
-		upfloorList = new ArrayList<Integer>();
+		reqGoUpList = new ArrayList<Integer>();
 		downfloorList = new ArrayList<Integer>();
 		this.capacity=capacity;
 	}
@@ -42,7 +42,7 @@ public class Lift {
 		loadWeight=weight;
 	}
 	public ArrayList<Passenger> getPassengerList() {return passengerList;}
-	public ArrayList<Integer> getUpReqFloorList(){return upfloorList;}
+	public ArrayList<Integer> getUpReqFloorList(){return reqGoUpList;}
 	public ArrayList<Integer> getDownReqFloorList(){return downfloorList;}
 	public Handler getHandler() {return handler;}
 	
@@ -68,7 +68,7 @@ public class Lift {
 	}
 	public int getReqDir() {return requestDir;}
 	public int totalAcceptedReq() {
-		return (this.upfloorList.size()+this.downfloorList.size());
+		return (this.reqGoUpList.size()+this.downfloorList.size());
 	}
 	public int checkClosestFromPassenger(int dir, int reqf,int reqDir) {
 		int shortestDist=Integer.MAX_VALUE;
@@ -101,5 +101,14 @@ public class Lift {
 			}
 		}
 		return shortestDist;
+	}
+	public boolean haveReqAccepted() {
+		return this.totalAcceptedReq()>0;
+	}
+	public boolean haveReqGoUp() {
+		return reqGoUpList.size()>0;
+	}
+	public boolean haveReqGoDown() {
+		return downfloorList.size()>0;
 	}
 }

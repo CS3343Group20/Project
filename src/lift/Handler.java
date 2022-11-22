@@ -2,6 +2,7 @@ package lift;
 
 import java.util.Iterator;
 
+import building.Building;
 import controlSystem.CMS;
 import controlSystem.Passenger;
 import controlSystem.Request;
@@ -14,6 +15,7 @@ public class Handler {
 	protected Lift lift;
 	protected CMS cms=CMS.getInstance();
 	protected RequestSystem reqSys=cms.getReqSys();
+	protected Building b=cms.getBuilding();
 	public Handler(Lift lift) {
 		this.lift=lift;
 	};
@@ -94,7 +96,7 @@ public class Handler {
 		if (curFloorHaveRequest2(f)) {
 			Iterator<Request> iterator=null;
 			int dirflag=-1;
-			if(lift.getUpReqFloorList().size()>0) {
+			if(lift.getUpReqFloorList().size()>0) {//assign upQueue to iterator
 				iterator=cms.getBuilding().getFlrMap().get((Integer) f).getUpQueue().iterator();
 				dirflag=1;
 			}
@@ -114,6 +116,7 @@ public class Handler {
 						
 					} catch (OverWeightException e) {
 						System.out.printf("Ignore people %s since overload%n",count);
+						b.getFlrMap().get(f).setUpflag(false);
 						lift.setStatus(new Full());
 						break;
 					}

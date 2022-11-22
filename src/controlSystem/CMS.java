@@ -132,11 +132,11 @@ public class CMS{
 	public void operate(int curTime) {
 		int i=0;
 		System.out.printf("%nCurrent time: %s%n",TimeConverter.fromStoTime(curTime));
-		for (Lift lift:liftList) {
+		for (Lift lift:liftList) {//operate each lift
 			System.out.printf("-----------------------------------%n");
 			System.out.printf("lift %s in %s/F (%s)%n",i,lift.getCurrentFloor(),TimeConverter.fromStoTime(curTime));
-			lift.getHandler().handleCurrentFloor(lift.getCurrentFloor(),i);
-			lift.move();//directon pre handle
+			lift.getHandler().handleCurrentFloor(lift.getCurrentFloor(),i);//handle all req & passenger on cur flr
+			lift.move();//directon handle
 			if (lift.getStatus().equals("idle")) {
 				System.out.printf("lift %s is idling......%n",i);
 			}

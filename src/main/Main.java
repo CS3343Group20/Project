@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import controlSystem.CMS;
-import controlSystem.Passenger;
 import controlSystem.Request;
-import controlSystem.RequestComparator;
 import exceptions.timeException.TimeFormatException;
 import simulator.Simulator;
 import time.TimeConverter;
-
+import utils.RequestComparator;
 //Exceptions
 import exceptions.InsufficientArgumentException;
 public class Main {

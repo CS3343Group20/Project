@@ -34,19 +34,22 @@ public class CMS{
 	public void setCurrentTime(int t) {time=t;}
 	public int getCurrentTime() {return time;}
 
-	public void assignClosest2(int reqf,int dir,int reqDir) {
+	public void assignClosest(int reqf,int reqDir) {//{here have problem: dir is fixed}
 		//TODO check if any lift has request on that floor already, if yes then assign that lift
 		
 		int shortestDistance=Integer.MAX_VALUE;
 		Lift assignLift=null;
 		int reqFloor=reqf;
+		int assignLiftdir=-1;
 		for (Lift lift:liftList) {
+			int dir=lift.getDirection();
 			// if status ok, same dir, not passed
-			if (checkAvailablity2(lift,dir,reqf)) {//check if current lift is able to pick up the passenger in req flr
-				int distance= calculateDistance2(lift,reqf);
+			if (checkAvailablity(lift,dir,reqf)) {//check if current lift is able to pick up the passenger in req flr
+				int distance= calculateDistance(lift,reqf);
 				if(distance<shortestDistance) {//if calculated result is smaller than shortest dis, assign the lift and update shortest dis
 					assignLift=lift;
 					shortestDistance=distance;
+					assignLiftdir=dir;
 				}
 			}
 			else {
@@ -54,6 +57,7 @@ public class CMS{
 				if(distance<shortestDistance) {
 					assignLift=lift;
 					shortestDistance=distance;
+					assignLiftdir=dir;
 				}
 			}
 		}
@@ -63,7 +67,7 @@ public class CMS{
 			}
 			
 			//lift assign to that floor request and set flag to prevent future allocation
-			if(dir==1) {
+			if(reqDir==1) {
 				if(!assignLift.getUpReqFloorList().contains(reqFloor)) {//does not contains up request from that floor before
 					assignLift.getUpReqFloorList().add(reqFloor);
 				}
@@ -80,13 +84,13 @@ public class CMS{
 				
 		}
 	}
-	private boolean checkAvailablity2(Lift lift, int dir,int reqf) {
+	private boolean checkAvailablity(Lift lift, int reqDir,int reqf) {
 		String status=lift.getStatus();
 		if (status.equals("idle"))
 			return true;
 		else if(status.equals("loaded")) {
-			if(sameDir2(lift,dir)) {
-				if(checkPassed2(lift,dir,reqf)) {
+			if(sameDir(lift,reqDir)) {
+				if(checkPassed(lift,reqDir,reqf)) {
 					return false;
 				}
 				else return true;
@@ -94,7 +98,7 @@ public class CMS{
 		}
 		return false;
 	}
-	private boolean checkPassed2(Lift lift,int dir, int reqf) {
+	private boolean checkPassed(Lift lift,int dir, int reqf) {
 		if (dir==1) {//go up
 			if(lift.getCurrentFloor()>reqf)
 				return true;
@@ -106,10 +110,10 @@ public class CMS{
 			else return false;
 		}
 	}
-	private boolean sameDir2(Lift lift, int dir) {
+	private boolean sameDir(Lift lift, int dir) {
 		return lift.getDirection()==dir;
 	}
-	private int calculateDistance2(Lift lift, int reqf) {
+	private int calculateDistance(Lift lift, int reqf) {
 		return  Math.abs(reqf-lift.getCurrentFloor());
 	}
 	

@@ -3,9 +3,9 @@ package lift;
 import java.util.ArrayList;
 
 import controlSystem.CMS;
-import controlSystem.Passenger;
 import lift.loadState.Idle;
 import lift.loadState.Status;
+import main.Passenger;
 
 public class Lift {
 	private int capacity;

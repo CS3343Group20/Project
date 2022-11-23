@@ -1,4 +1,7 @@
-package controlSystem;
+package main;
+
+import controlSystem.CMS;
+import controlSystem.Request;
 
 public class Passenger {
 	private int weight;

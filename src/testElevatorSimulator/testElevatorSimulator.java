@@ -65,7 +65,7 @@ public class testElevatorSimulator {
 	}
 	
 	
-	
+
 
 	//Lift.java
 	//--------------------------------------------------
@@ -419,6 +419,7 @@ public class testElevatorSimulator {
 	public void testAssignC2_1() throws Exception {
 		setOutput();
 		CMS cms = CMS.getInstance();
+		cms.getLiftList().clear();
 		cms.createLift(120);
 		cms.createLift(120);
 		
@@ -436,6 +437,7 @@ public class testElevatorSimulator {
 		expect+= "lift 0 is idling......";
 		
 		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
 		cms.createLift(120);
 		cms.operate(0);
 		//assertEquals(expect,getOutput());
@@ -454,6 +456,7 @@ public class testElevatorSimulator {
 		
 		
 		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
 		cms.createLift(120);
 		//test fail
 		cms.getLiftList().get(0).setStatus(new Loaded());
@@ -462,6 +465,86 @@ public class testElevatorSimulator {
 		
 	}
 	
+	//test CMS.java CurrentTime()
+	@Test
+	public void testCurrentTime() {
+		CMS cms=CMS.getInstance();
+		cms.setCurrentTime(3);
+		assertEquals(3, cms.getCurrentTime());
+	}
+	
+	//test CMS.java assignClosest2()
+
+	@Test
+	public void testassignClosest2_1() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		cms.assignClosest2(1, 1, 1);
+		
+	}
+	
+	@Test
+	public void testassignClosest2_2() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		Status s = new Loaded();
+		cms.getLiftList().get(0).setStatus(s);
+		cms.assignClosest2(1, 1, 1);
+		
+	}
+	
+	@Test
+	public void testassignClosest2_3() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		Status s = new Loaded();
+		cms.getLiftList().get(0).setStatus(s);
+		cms.getLiftList().get(0).move();
+		assertEquals(1,cms.getLiftList().get(0).getCurrentFloor());
+		cms.assignClosest2(0, 1, 1);
+		
+	}
+	
+	@Test
+	public void testassignClosest2_4() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		Status s = new Full();
+		cms.getLiftList().get(0).setStatus(s);
+		cms.assignClosest2(0, 1, 1);
+		
+	}
+	
+	@Test
+	public void testassignClosest2_5() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		Status s = new Loaded();
+		Lift l=cms.getLiftList().get(0);
+		l.setStatus(s);
+		l.setDirection(0);
+		
+		cms.assignClosest2(0, 0, 0);
+		
+	}
+	
+	@Test
+	public void testassignClosest2_6() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		Status s = new Loaded();
+		cms.getLiftList().get(0).setStatus(s);
+
+		cms.getLiftList().get(0).setDirection(0);
+		cms.assignClosest2(1, 0, 0);
+		
+	}
 
 	//TimeConverter.java
 	//------------------------------

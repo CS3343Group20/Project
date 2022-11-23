@@ -9,7 +9,7 @@ import lift.loadState.Loaded;
 import time.TimeConverter;
 
 public class CMS{
-	private Building b;
+	private Building building;
 	private static CMS instance=new CMS();
 	List<Lift> liftList;
 	RequestSystem reqSys;
@@ -18,7 +18,7 @@ public class CMS{
 	private CMS() {
 		reqSys=new RequestSystem(this);
 		liftList=new ArrayList<Lift>();
-		this.b= new Building(20);
+		this.building= new Building(20);
 	};
 	public static CMS getInstance() {
 		return instance;
@@ -67,14 +67,14 @@ public class CMS{
 				if(!assignLift.getUpReqFloorList().contains(reqFloor)) {//does not contains up request from that floor before
 					assignLift.getUpReqFloorList().add(reqFloor);
 				}
-				b.getFlrMap().get(reqf).setUpflag(true);
+				building.getFlrMap().get(reqf).setUpflag(true);
 				assignLift.setReqDir(1);
 			}	
 			else {
 				if(!assignLift.getDownReqFloorList().contains(reqFloor)) {//does not contains down request from that floor before
 					assignLift.getDownReqFloorList().add(reqFloor);
 				}
-				b.getFlrMap().get(reqf).setDownflag(true);
+				building.getFlrMap().get(reqf).setDownflag(true);
 				assignLift.setReqDir(0);
 			}
 				
@@ -120,7 +120,7 @@ public class CMS{
 			return true;
 	}
 	public boolean flrHaveRequest(int f) {
-		return this.b.getFlrMap().get(f).haveReq();
+		return this.building.getFlrMap().get(f).haveReq();
 	}
 
 	public void operate(int curTime) {
@@ -147,7 +147,7 @@ public class CMS{
 		return false;
 	}
 	public Building getBuilding() {
-		return b;
+		return building;
 	}
 	
 	public List<Lift> getLiftList(){

@@ -500,9 +500,12 @@ public class testElevatorSimulator {
 		CMS cms=CMS.getInstance();
 		cms.getLiftList().clear();
 		cms.createLift(120);
-		cms.getLiftList().get(0).setStatus(new Loaded());
-		cms.getLiftList().get(0).move();
-		assertEquals(1,cms.getLiftList().get(0).getCurrentFloor());
+		Lift l = cms.getLiftList().get(0);
+		l.setStatus(new Loaded());
+		l.move();
+		assertEquals("loaded",l.getStatus());
+		assertEquals(1,l.getCurrentFloor());
+
 		cms.assignClosest(0, 1);	
 	}
 	

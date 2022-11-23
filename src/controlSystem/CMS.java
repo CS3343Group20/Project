@@ -14,12 +14,10 @@ public class CMS{
 	List<Lift> liftList;
 	RequestSystem reqSys;
 	int time;
-	int runningLift;
 	
 	private CMS() {
 		reqSys=new RequestSystem(this);
 		liftList=new ArrayList<Lift>();
-		runningLift=0;
 		this.b= new Building(20);
 	};
 	public static CMS getInstance() {
@@ -32,10 +30,7 @@ public class CMS{
 	public RequestSystem getReqSys() {
 		return reqSys;
 	}
-	public int getRunningLift() {return runningLift;}
-	public void setRunningLift(int i) {
-		runningLift=i;
-	}
+
 	public void setCurrentTime(int t) {time=t;}
 	public int getCurrentTime() {return time;}
 
@@ -65,7 +60,6 @@ public class CMS{
 		if (assignLift!=null) {
 			if (assignLift.getStatus().equals("idle")) {
 				assignLift.setStatus(new Loaded());
-				runningLift++;
 			}
 			
 			//lift assign to that floor request and set flag to prevent future allocation

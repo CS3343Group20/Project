@@ -80,7 +80,6 @@ public class Handler {
 			if(lift.getCurrentFloor()==0&&lift.isEmpty()&&!lift.haveReqAccepted()) {//reset lift status
 				lift.setDirection(1);
 				lift.setStatus(new Idle());
-				cms.setRunningLift(cms.getRunningLift()-1);
 				System.out.printf("arrived to 0/F, idling...%n");
 			}
 		}

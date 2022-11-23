@@ -473,78 +473,39 @@ public class testElevatorSimulator {
 		assertEquals(3, cms.getCurrentTime());
 	}
 	
-	//test CMS.java assignClosest2()
-
+	//test CMS.java assignClosest()
+	//0 time
 	@Test
-	public void testassignClosest2_1() {
+	public void testassignClosest_1() {
 		CMS cms=CMS.getInstance();
 		cms.getLiftList().clear();
-		cms.createLift(120);
-		cms.assignClosest2(1, 1, 1);
-		
+		cms.assignClosest(0, 1);	
 	}
 	
+	//test CMS.java assignClosest()
+	//1 time, all F
 	@Test
-	public void testassignClosest2_2() {
+	public void testassignClosest_2() {
 		CMS cms=CMS.getInstance();
 		cms.getLiftList().clear();
 		cms.createLift(120);
-		Status s = new Loaded();
-		cms.getLiftList().get(0).setStatus(s);
-		cms.assignClosest2(1, 1, 1);
-		
+		cms.getLiftList().get(0).setStatus(new Full());
+		cms.assignClosest(0, 1);	
 	}
 	
+	//test CMS.java assignClosest()
+	//1 time
 	@Test
-	public void testassignClosest2_3() {
+	public void testassignClosest_3() {
 		CMS cms=CMS.getInstance();
 		cms.getLiftList().clear();
 		cms.createLift(120);
-		Status s = new Loaded();
-		cms.getLiftList().get(0).setStatus(s);
+		cms.getLiftList().get(0).setStatus(new Loaded());
 		cms.getLiftList().get(0).move();
 		assertEquals(1,cms.getLiftList().get(0).getCurrentFloor());
-		cms.assignClosest2(0, 1, 1);
-		
+		cms.assignClosest(0, 1);	
 	}
 	
-	@Test
-	public void testassignClosest2_4() {
-		CMS cms=CMS.getInstance();
-		cms.getLiftList().clear();
-		cms.createLift(120);
-		Status s = new Full();
-		cms.getLiftList().get(0).setStatus(s);
-		cms.assignClosest2(0, 1, 1);
-		
-	}
-	
-	@Test
-	public void testassignClosest2_5() {
-		CMS cms=CMS.getInstance();
-		cms.getLiftList().clear();
-		cms.createLift(120);
-		Status s = new Loaded();
-		Lift l=cms.getLiftList().get(0);
-		l.setStatus(s);
-		l.setDirection(0);
-		
-		cms.assignClosest2(0, 0, 0);
-		
-	}
-	
-	@Test
-	public void testassignClosest2_6() {
-		CMS cms=CMS.getInstance();
-		cms.getLiftList().clear();
-		cms.createLift(120);
-		Status s = new Loaded();
-		cms.getLiftList().get(0).setStatus(s);
-
-		cms.getLiftList().get(0).setDirection(0);
-		cms.assignClosest2(1, 0, 0);
-		
-	}
 
 	//TimeConverter.java
 	//------------------------------
@@ -653,7 +614,7 @@ public class testElevatorSimulator {
 		TimeExtracter t = new TimeExtracter();
 		String time = "61";
 		MinuteException ex = assertThrows(MinuteException.class, ()->{
-			t.extractMinute(time);
+				t.extractMinute(time);
 		});
 		assertEquals("Minute incorrect",ex.getMessage());
 	}

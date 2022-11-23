@@ -1,6 +1,8 @@
-package controlSystem;
+package utils;
 
 import java.util.Comparator;
+
+import controlSystem.Request;
 
 public class RequestComparator implements Comparator<Request>{
 	@Override

@@ -1,14 +1,17 @@
-package controlSystem;
+package main;
+
+import controlSystem.CMS;
+import controlSystem.Request;
 
 public class Passenger {
 	private int weight;
 	private int currentFloor;
 	private int targetFloor;
 	private int direction;
-	private RequestSystem reqSys;
+
 	
 	public void makeRequest(int requestTime) {
-		reqSys.request(new Request(this,requestTime));
+		CMS.getInstance().getReqSys().request(new Request(this,requestTime));
 	}
 	public Passenger(int weight,int cfloor, int tfloor){
 		this.weight=weight;
@@ -18,7 +21,6 @@ public class Passenger {
 			direction=1;
 		}
 		else direction=0;
-		reqSys=CMS.getInstance().getReqSys();
 	}
 	public int getCurrentFloor() {return currentFloor;}
 	public int getTargetFloor() {return targetFloor;}

@@ -66,6 +66,101 @@ public class testElevatorSimulator {
 	
 	
 	
+	//Building.java
+	//-------------------------------------------
+	//test Building.java getFloorCount()
+	@Test
+	public void testGetFloorCount() {
+		Building b = new Building(6);
+		assertEquals(6, b.getFloorCount());
+	}
+
+	
+	
+	
+	//Floor.java
+	//-------------------------------------------
+	
+	//test Floor.java upReqAccepted()
+	@Test
+	public void testupReqAccepted() {
+		Floor f = new Floor(1);
+		f.upReqAccepted();
+		assertEquals(true, f.getUpflag());
+	}
+	
+	//test Floor.java downReqAccepted()	
+	@Test
+	public void testdownReqAccepted() {
+		Floor f = new Floor(1);
+		f.downReqAccepted();
+		assertEquals(true, f.getDownflag());
+	}
+	
+	
+	//test Floor.java haveUpReq()	
+	//false
+	@Test
+	public void testhaveUpReq_1() {
+		Floor f = new Floor(1);
+		assertEquals(false, f.haveUpReq(0));
+	}
+	
+	
+	//test Floor.java haveUpReq()	
+	//false
+	@Test
+	public void testhaveUpReq_2() {
+		Floor f = new Floor(1);
+		Passenger p = new Passenger(60,1,3);
+		Request r = new Request(p,1);
+		f.getUpQueue().add(r);
+		assertEquals(false, f.haveUpReq(0));
+	}
+	
+	//test Floor.java haveUpReq()	
+	//true
+	@Test
+	public void testhaveUpReq_3() {
+		Floor f = new Floor(1);
+		Passenger p = new Passenger(60,1,3);
+		Request r = new Request(p,0);
+		f.getUpQueue().add(r);
+		assertEquals(true, f.haveUpReq(0));
+	}
+
+	//test Floor.java haveDownReq()	
+	//false
+	@Test
+	public void testhaveDownReq_1() {
+		Floor f = new Floor(1);
+		assertEquals(false, f.haveDownReq(0));
+	}
+	
+	
+	//test Floor.java haveUpReq()	
+	//false
+	@Test
+	public void testhaveDownReq_2() {
+		Floor f = new Floor(1);
+		Passenger p = new Passenger(60,1,0);
+		Request r = new Request(p,1);
+		f.getDownQueue().add(r);
+		assertEquals(false, f.haveDownReq(0));
+	}
+	
+	//test Floor.java haveUpReq()	
+	//true
+	@Test
+	public void testhaveDownReq_3() {
+		Floor f = new Floor(1);
+		Passenger p = new Passenger(60,1,0);
+		Request r = new Request(p,0);
+		f.getDownQueue().add(r);
+		assertEquals(true, f.haveDownReq(0));
+	}
+	
+	
 
 	//Lift.java
 	//--------------------------------------------------
@@ -419,6 +514,7 @@ public class testElevatorSimulator {
 	public void testAssignC2_1() throws Exception {
 		setOutput();
 		CMS cms = CMS.getInstance();
+		cms.getLiftList().clear();
 		cms.createLift(120);
 		cms.createLift(120);
 		
@@ -436,6 +532,7 @@ public class testElevatorSimulator {
 		expect+= "lift 0 is idling......";
 		
 		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
 		cms.createLift(120);
 		cms.operate(0);
 		//assertEquals(expect,getOutput());
@@ -454,12 +551,213 @@ public class testElevatorSimulator {
 		
 		
 		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
 		cms.createLift(120);
-		//test fail
-		cms.getLiftList().get(0).setStatus(new Loaded());
+		Passenger p = new Passenger(50,0,3);
+		
+		Lift l = cms.getLiftList().get(0);
+		l.getPassengerList().add(p);
+		l.setStatus(new Loaded());
 		cms.operate(0);
 		//assertEquals(expect,getOutput());
 		
+	}
+	
+	//test CMS.java CurrentTime()
+	@Test
+	public void testCurrentTime() {
+		CMS cms=CMS.getInstance();
+		cms.setCurrentTime(3);
+		assertEquals(3, cms.getCurrentTime());
+	}
+	
+	//test CMS.java assignClosest()
+	//0 time
+	@Test
+	public void testassignClosest_1() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.assignClosest(0, 1);	
+	}
+	
+	//test CMS.java assignClosest()
+	//1 time, all F
+	@Test
+	public void testassignClosest_2() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		cms.getLiftList().get(0).setStatus(new Full());
+		cms.assignClosest(0, 1);	
+	}
+	
+	//test CMS.java assignClosest()
+	//1 time, not sameDir, reqDir=0, have reqf
+	@Test
+	public void testassignClosest_3() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		
+		Passenger p = new Passenger(50,0,3);
+		
+		Lift l = cms.getLiftList().get(0);
+		l.getPassengerList().add(p);
+		l.setStatus(new Loaded());
+		l.move();
+		l.getDownReqFloorList().add(2);
+		cms.assignClosest(2, 0);	
+		assertEquals(0,l.getReqDir());
+	}
+	
+	//test CMS.java assignClosest()
+	//1 time, not sameDir, reqDir=0
+	@Test
+	public void testassignClosest_4() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		
+		Passenger p = new Passenger(50,0,3);
+		
+		Lift l = cms.getLiftList().get(0);
+		l.getPassengerList().add(p);
+		l.setStatus(new Loaded());
+		l.move();
+		
+		cms.assignClosest(2, 0);	
+		assertEquals(0,l.getReqDir());
+	}
+	
+	//test CMS.java assignClosest()
+	//1 time, sameDir, DownPass
+	@Test
+	public void testassignClosest_5() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		
+		Passenger p = new Passenger(50,0,3);
+		
+		Lift l = cms.getLiftList().get(0);
+		l.getPassengerList().add(p);
+		l.setStatus(new Loaded());
+		l.move();
+		l.setDirection(0);
+		cms.assignClosest(2, 0);	
+		assertEquals(1,l.getReqDir());
+	}
+	
+	//test CMS.java assignClosest()
+	//1 time, sameDir, Down not Pass
+	@Test
+	public void testassignClosest_6() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		
+		Passenger p = new Passenger(50,0,3);
+		
+		Lift l = cms.getLiftList().get(0);
+		l.getPassengerList().add(p);
+		l.setStatus(new Loaded());
+		l.move();
+		l.setDirection(0);
+		cms.assignClosest(1, 0);	
+		assertEquals(0,l.getReqDir());
+	}
+	
+	//test CMS.java assignClosest()
+	//1 time, sameDir, up Pass
+	@Test
+	public void testassignClosest_7() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		
+		Passenger p = new Passenger(50,0,3);
+		
+		Lift l = cms.getLiftList().get(0);
+		l.getPassengerList().add(p);
+		l.setStatus(new Loaded());
+		l.move();
+		cms.assignClosest(0, 1);	
+		assertEquals(1,l.getReqDir());
+	}
+	
+	//test CMS.java assignClosest()
+	//1 time, sameDir, up not Pass
+	@Test
+	public void testassignClosest_8() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		
+		Passenger p = new Passenger(50,0,3);
+		
+		Lift l = cms.getLiftList().get(0);
+		l.getPassengerList().add(p);
+		l.setStatus(new Loaded());
+		l.getUpReqFloorList().add(1);
+		cms.assignClosest(1, 1);	
+		assertEquals(1,l.getReqDir());
+	}
+	
+	//test CMS.java assignClosest()
+	//1 time, sameDir, up not Pass
+	@Test
+	public void testassignClosest_9() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		
+		Passenger p = new Passenger(50,0,3);
+		
+		Lift l = cms.getLiftList().get(0);
+		l.getPassengerList().add(p);
+		l.setStatus(new Loaded());
+
+		cms.assignClosest(1, 1);	
+		assertEquals(1,l.getReqDir());
+	}
+	
+	//test CMS.java assignClosest()
+	//1 time, idle
+	@Test
+	public void testassignClosest_10() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		
+		Lift l = cms.getLiftList().get(0);
+
+		cms.assignClosest(1, 1);	
+		assertEquals(1,l.getReqDir());
+	}
+	
+	//test CMS.java curHaveRequestt()
+	//true
+	@Test
+	public void testcurHaveRequest_1() {
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		
+		Passenger p = new Passenger(60,0,3);
+		Request r = new Request(p,0);
+		cms.getReqSys().request(r);
+		
+		assertEquals(true,cms.curHaveRequest());
+		cms.getReqSys().getAllReq().clear();
+	}
+	
+	//test CMS.java curHaveRequestt()
+	//false
+	@Test
+	public void testcurHaveRequest_2() {
+		CMS cms=CMS.getInstance();
+		
+		
+		assertEquals(false,cms.curHaveRequest());
 	}
 	
 
@@ -506,7 +804,7 @@ public class testElevatorSimulator {
 	@Test
 	public void testConTime_4() throws TimeFormatException {
 		TimeConverter t = new TimeConverter();
-		String time = "00:00:a";
+		String time = "aa,aa,aa";
 		//TimeFormatException ex = assertThrows(TimeFormatException.class, ()->{
 			//t.ConvertTime(time);
 		//});
@@ -570,7 +868,7 @@ public class testElevatorSimulator {
 		TimeExtracter t = new TimeExtracter();
 		String time = "61";
 		MinuteException ex = assertThrows(MinuteException.class, ()->{
-			t.extractMinute(time);
+				t.extractMinute(time);
 		});
 		assertEquals("Minute incorrect",ex.getMessage());
 	}

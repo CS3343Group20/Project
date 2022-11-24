@@ -5,12 +5,12 @@ import java.util.Iterator;
 import building.Building;
 import building.Floor;
 import controlSystem.CMS;
-import controlSystem.Passenger;
 import controlSystem.Request;
 import controlSystem.RequestSystem;
 import exceptions.OverWeightException;
 import lift.loadState.Full;
 import lift.loadState.Idle;
+import main.Passenger;
 
 public class Handler {
 	protected Lift lift;
@@ -80,7 +80,6 @@ public class Handler {
 			if(lift.getCurrentFloor()==0&&lift.isEmpty()&&!lift.haveReqAccepted()) {//reset lift status
 				lift.setDirection(1);
 				lift.setStatus(new Idle());
-				cms.setRunningLift(cms.getRunningLift()-1);
 				System.out.printf("arrived to 0/F, idling...%n");
 			}
 		}

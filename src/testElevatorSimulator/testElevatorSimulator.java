@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import lift.*;
@@ -63,6 +64,48 @@ public class testElevatorSimulator {
 
 		//assertEquals("lift created!lift created!Enter request time (hh:mm:ss)|current floor|target floor|weight:------------------Start simulation-----------------Simulation ends!", getOutput());
 	}
+	
+	
+	
+	
+	//Simulator.java
+	//-------------------------------------------
+	//test Simulator.java StartSimulation()
+	@Test
+	public void testStartS_1() {
+		ArrayList<Request> inputList=new ArrayList<>();
+		Passenger p = new Passenger(60,0,3);
+		Request r = new Request(p,0);
+		inputList.add(r);
+		Simulator s = new Simulator();
+		Building b = new Building(6);
+		Floor f = b.getFlrMap().get((Integer) 0);
+		f.AddtoQueue(r);
+		s.StartSimulation(b, inputList);
+
+	}
+	
+	//test Simulator.java StartSimulation()
+	@Test
+	public void testStartS_2() {
+		ArrayList<Request> inputList=new ArrayList<>();
+		Passenger p = new Passenger(60,3,0);
+		Request r = new Request(p,0);
+		inputList.add(r);
+		Simulator s = new Simulator();
+		Building b = new Building(6);
+		Floor f = b.getFlrMap().get((Integer) 3);
+		f.AddtoQueue(r);
+		s.StartSimulation(b, inputList);
+
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -323,6 +366,26 @@ public class testElevatorSimulator {
 		lift.move();
 		handler.checkArriveToTarget(0);
 		assertEquals(0, lift.getPassengerList().size());
+	}
+	
+	
+	
+	//------
+	//test Handler.java directionHandle()
+	@Test
+	public void testdirectionHandle() {
+		Passenger p = new Passenger(50,0,3);
+		
+		Lift l = new Lift(120);
+		l.setStatus(new Loaded());
+		l.getPassengerList().add(p);
+		l.move();
+		l.getPassengerList().clear();
+		l.getDownReqFloorList().add(0);
+		Handler h = new Handler(l);
+		h.directionHandle();
+		assertEquals(0,l.getDirection());
+		
 	}
 	
 	

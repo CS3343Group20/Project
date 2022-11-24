@@ -11,10 +11,10 @@ import simulator.Simulator;
 import time.TimeConverter;
 import utils.RequestComparator;
 //Exceptions
-import exceptions.InsufficientArgumentException;
+
 public class Main {
 	
-	public static void main(String[] args) throws ParseException, InsufficientArgumentException {	
+	public static void main(String[] args) throws ParseException {	
 		CMS cms= CMS.getInstance(); // create a cms instance
 		cms.createLift(1000); // create a lift with 1000 KG capacity
 		cms.createLift(1000); // create a lift with 1000 KG capacity

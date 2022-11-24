@@ -96,9 +96,7 @@ public class Lift {
 			if(lowest<shortestDist) {//if lift is going down and the lowest flr passenger going is higher than the up request
 				shortestDist=lowest-reqf;
 			}
-			else if (lowest>shortestDist) {
-				shortestDist=reqf-lowest;
-			}
+
 		}
 		return shortestDist;
 	}

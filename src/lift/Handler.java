@@ -21,7 +21,7 @@ public class Handler {
 		this.lift=lift;
 	};
 	
-	public void pickupPassenger(Passenger p) throws Exception{
+	public void pickupPassenger(Passenger p) throws OverWeightException{
 		int newWeight=lift.getLoadWeight()+p.getWeight();
 		if(newWeight>lift.getCapacity()) {
 			throw new OverWeightException();
@@ -112,10 +112,7 @@ public class Handler {
 						b.getFlrMap().get(f).setUpflag(false);
 						lift.setStatus(new Full());
 						break;
-					} catch (Exception e) {
-						e.printStackTrace();
-						break;
-					}	
+					} 
 				}
 				System.out.printf("Lift %s Loaded %s people at %s/F %n",index,count,lift.getCurrentFloor());
 				if(dirflag==1)

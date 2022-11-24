@@ -44,7 +44,7 @@ public class CMS{
 		for (Lift lift:liftList) {
 			int dir=lift.getDirection();
 			// if status ok, same dir, not passed
-			if (checkAvailablity(lift,dir,reqf)) {//check if current lift is able to pick up the passenger in req flr
+			if (checkAvailablity(lift,reqDir,reqf)) {//check if current lift is able to pick up the passenger in req flr
 				int distance= calculateDistance(lift,reqf);
 				if(distance<shortestDistance) {//if calculated result is smaller than shortest dis, assign the lift and update shortest dis
 					assignLift=lift;

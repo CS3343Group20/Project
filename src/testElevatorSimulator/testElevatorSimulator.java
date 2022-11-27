@@ -44,8 +44,12 @@ public class testElevatorSimulator {
 		CMS cms = CMS.getInstance();
 		RequestSystem rs = cms.getReqSys();
 		rs.getAllReq().clear();
-		cms.getBuilding().getFlrMap().get(1).getUpQueue().clear();
-		cms.getBuilding().getFlrMap().get(1).getDownQueue().clear();
+		for (int i=0;i<6;i++) {
+			cms.getBuilding().getFlrMap().get(i).getUpQueue().clear();
+			cms.getBuilding().getFlrMap().get(i).getDownQueue().clear();
+			
+		}
+		
 	}
 	
 	//------------------Start Testing----------------------
@@ -446,27 +450,18 @@ public class testElevatorSimulator {
 	
 	@Test
 	public void testHandleCF_1() {
-		class stubHandler extends Handler{
 
-			public stubHandler(Lift lift) {
-				super(lift);
-			}
-			
-			public boolean curFloorHaveRequest2(int f) {
-				return true;
-			}
-			
-		}
+
 		
 		CMS cms = CMS.getInstance();
 		Lift lift = new Lift(120);
-		stubHandler sh = new stubHandler(lift);
+		Handler h = new Handler(lift);
 		lift.getUpReqFloorList().add(0);
 		Passenger p = new Passenger(50, 0, 1);
 		Request r = new Request(p, 0);
 		RequestSystem rs = cms.getReqSys();
 		rs.request(r);
-		sh.handleCurrentFloor(0, 0);
+		h.handleCurrentFloor(0, 0);
 		assertEquals(0, rs.getAllReq().size());
 		assertEquals(1, lift.getPassengerList().size());
 		

@@ -317,7 +317,7 @@ public class testElevatorSimulator {
 	}
 
 	//test Lift.java checkClosestFromPassenger()
-	//lift down, req up, exist lowest reqflr > request flr
+
 	@Test
 	public void testCheckClosestFP_4() {
 		Lift lift = new Lift(120);
@@ -327,6 +327,60 @@ public class testElevatorSimulator {
 		int result = lift.checkClosestFromPassenger(0, 1, 1);
 		
 		assertEquals(1, result);
+		
+	}
+	
+	//test Lift.java checkClosestFromPassenger()
+
+	@Test
+	public void testCheckClosestFP_5() {
+		Lift lift = new Lift(120);
+		Passenger passenger = new Passenger(50, 2, 5);
+		Passenger passenger1 = new Passenger(50, 2, 4);
+		lift.getPassengerList().add(passenger);
+		lift.getPassengerList().add(passenger1);
+		int result = lift.checkClosestFromPassenger(1, 4, 0);
+
+		assertEquals(1, result);
+		
+	}
+	//test Lift.java checkClosestFromPassenger()
+	
+	@Test
+	public void testCheckClosestFP_6() {
+		Lift lift = new Lift(120);
+		Passenger passenger = new Passenger(50, 2, 5);
+		lift.getPassengerList().add(passenger);
+		int result = lift.checkClosestFromPassenger(1, 5, 0);
+
+		assertEquals(Integer.MAX_VALUE, result);
+		
+	}
+	
+	//test Lift.java checkClosestFromPassenger()
+	//lift down, req up
+	@Test
+	public void testCheckClosestFP_7() {
+		Lift lift = new Lift(120);
+		Passenger passenger = new Passenger(50, 5, 2);
+		Passenger passenger1 = new Passenger(50, 5, 3);
+		lift.getPassengerList().add(passenger);
+		lift.getPassengerList().add(passenger1);
+		int result = lift.checkClosestFromPassenger(0, 3, 1);
+
+		assertEquals(-1, result);
+		
+	}
+	
+	//test Lift.java checkClosestFromPassenger()
+	//lift down, req up
+	@Test
+	public void testCheckClosestFP_8() {
+		Lift lift = new Lift(120);
+
+		int result = lift.checkClosestFromPassenger(0, 3, 1);
+
+		assertEquals(Integer.MAX_VALUE, result);
 		
 	}
 	
@@ -440,7 +494,7 @@ public class testElevatorSimulator {
 	//------
 	//test Handler.java directionHandle()
 	@Test
-	public void testdirectionHandle() {
+	public void testdirectionHandle_1() {
 		Passenger p = new Passenger(50,0,3);
 		
 		Lift l = new Lift(120);
@@ -455,15 +509,24 @@ public class testElevatorSimulator {
 		
 	}
 	
-	
-	
 	//------
-	//test Handle.java curFloorHaveAccepedReq()
-	//What is the use of curFloorHaveAccepedReq()
+	//test Handler.java directionHandle()
 	@Test
-	public void testCurHvAcpReq() {
+	public void testdirectionHandle_2() {
+		Passenger p = new Passenger(50,0,3);
+		
+		Lift l = new Lift(120);
+		l.setStatus(new Loaded());
+		l.getPassengerList().add(p);
+		l.move();
+		l.getDownReqFloorList().add(0);
+		Handler h = new Handler(l);
+		h.directionHandle();
+		assertEquals(1,l.getDirection());
 
 	}
+		
+			
 	
 	//-----
 	//test Handle.java curFloorHaveRequest2()
@@ -515,7 +578,6 @@ public class testElevatorSimulator {
 	public void testHandleCF_1() {
 
 
-		
 		CMS cms = CMS.getInstance();
 		Lift lift = new Lift(120);
 		Handler h = new Handler(lift);
@@ -566,26 +628,11 @@ public class testElevatorSimulator {
 	}
 	
 	
-	//test Handle.java handleCurrentFloor()
-	//have up request, but lift is going down with passenger
-	// not test now, next phrase
-	@Test
-	public void testHandleCF_3() {
-		
-	}
-		
-	//test Handle.java handleCurrentFloor()
-	//have down request, but lift is going up with passenger
-	// not test now, next phrase
-	@Test
-	public void testHandleCF_4() {
-		
-	}	
 	
 	//test Handle.java handleCurrentFloor()
 	//have request but overWeightexception
 	@Test
-	public void testHandleCF_5() {
+	public void testHandleCF_3() {
 		class stubHandler extends Handler{
 
 			public stubHandler(Lift lift) {
@@ -617,12 +664,6 @@ public class testElevatorSimulator {
 
 	}
 
-	//test Handle.java handleCurrentFloor()
-	//exception
-	//remark: no idea how to trigger the exception
-	public void testHandleCF_6() {
-		
-	}
 	
 	
 	

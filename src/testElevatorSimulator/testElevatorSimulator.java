@@ -49,7 +49,7 @@ public class testElevatorSimulator {
 			cms.getBuilding().getFlrMap().get(i).getDownQueue().clear();
 			
 		}
-		
+		cms.getLiftList().clear();
 	}
 	
 	//------------------Start Testing----------------------
@@ -87,6 +87,10 @@ public class testElevatorSimulator {
 		f.AddtoQueue(r);
 		s.StartSimulation(b, inputList);
 
+		CMS cms = CMS.getInstance();
+		cms.createLift(120);
+		assertEquals(1, cms.getReqSys().getAllReq().size());
+		clean();
 	}
 	
 	//test Simulator.java StartSimulation()
@@ -102,15 +106,74 @@ public class testElevatorSimulator {
 		f.AddtoQueue(r);
 		s.StartSimulation(b, inputList);
 
+		CMS cms = CMS.getInstance();
+		cms.createLift(120);
+		assertEquals(1, cms.getReqSys().getAllReq().size());
+		clean();
 	}
 	
 	
+	//test Simulator.java StartSimulation()
+	@Test
+	public void testStartS_3() {
+		ArrayList<Request> inputList=new ArrayList<>();
+		Passenger p = new Passenger(60,3,0);
+		Request r = new Request(p,10);
+		inputList.add(r);
+		Simulator s = new Simulator();
+		Building b = new Building(6);
+		Floor f = b.getFlrMap().get((Integer) 3);
+		f.AddtoQueue(r);
+		s.StartSimulation(b, inputList);
+
+		CMS cms = CMS.getInstance();
+		cms.createLift(120);
+		assertEquals(1, cms.getReqSys().getAllReq().size());
+		clean();
+	}
 	
 	
+	//test Simulator.java StartSimulation()
+	@Test
+	public void testStartS_4() {
+		ArrayList<Request> inputList=new ArrayList<>();
+		Passenger p = new Passenger(60,0,3);
+		Request r = new Request(p,0);
+		inputList.add(r);
+		Simulator s = new Simulator();
+		Building b = new Building(6);
+		Floor f = b.getFlrMap().get((Integer) 0);
+		f.AddtoQueue(r);
+		f.upReqAccepted();
+		s.StartSimulation(b, inputList);
+
+		CMS cms = CMS.getInstance();
+		cms.createLift(120);
+		assertEquals(1, cms.getReqSys().getAllReq().size());
+		clean();
+	}
+		
 	
-	
-	
-	
+	//test Simulator.java StartSimulation()
+	@Test
+	public void testStartS_5() {
+		ArrayList<Request> inputList=new ArrayList<>();
+		Passenger p = new Passenger(60,3,0);
+		Request r = new Request(p,0);
+		inputList.add(r);
+		Simulator s = new Simulator();
+		Building b = new Building(6);
+		Floor f = b.getFlrMap().get((Integer) 3);
+		f.AddtoQueue(r);
+		f.downReqAccepted();
+		s.StartSimulation(b, inputList);
+
+		CMS cms = CMS.getInstance();
+		cms.createLift(120);
+		assertEquals(1, cms.getReqSys().getAllReq().size());
+		clean();
+	}
+			
 	
 	
 	//Building.java

@@ -20,7 +20,9 @@ public class Main {
 		cms.createLift(1000); // create a lift with 1000 KG capacity
 		String requestTime="";
         Simulator sim=new Simulator();
-        ArrayList<Request> inputList=new ArrayList<>();
+        FileReader fr= new FileReader();
+        fr.readFile("src/input.txt");
+        /*ArrayList<Request> inputList=new ArrayList<>();
     	int parseInTime;
         while (true) {//begin simulation
         	String[] inputcmd;
@@ -38,7 +40,6 @@ public class Main {
         	try {
         		parseInTime=TimeConverter.ConvertTime(requestTime);
 			} catch (TimeFormatException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.out.println("Input error ,please try again.");
 				continue;
@@ -54,8 +55,8 @@ public class Main {
             inputList.add(new Request(p,parseInTime));
 			//p.makeRequest(parseInTime);
         }
-        inputList.sort(new RequestComparator());
+        inputList.sort(new RequestComparator());*/
         //cms.getReqSys().printQueue();
-        sim.StartSimulation(cms.getBuilding(),inputList);
+        sim.StartSimulation(cms.getBuilding(),fr.getInputList());
     }
 }

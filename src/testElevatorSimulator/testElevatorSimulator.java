@@ -347,7 +347,7 @@ public class testElevatorSimulator {
 		Request r = new Request(p, 0);
 		RequestSystem rs = cms.getReqSys();
 		rs.request(r);
-		assertEquals(true, handler.curFloorHaveRequest2(0));
+		assertEquals(true, handler.curFloorHaveRequest(0));
 		clean();
 	}
 	
@@ -362,7 +362,7 @@ public class testElevatorSimulator {
 		Request r = new Request(p, 0);
 		RequestSystem rs = cms.getReqSys();
 		rs.request(r);
-		assertEquals(true, handler.curFloorHaveRequest2(1));
+		assertEquals(true, handler.curFloorHaveRequest(1));
 		clean();
 	}
 	//remarks: Floor.java addToUp/DownQueue are not necessary? I think we can delete them
@@ -373,7 +373,7 @@ public class testElevatorSimulator {
 	public void testCurFlrHvReq_3() {
 		Lift lift = new Lift(120);
 		Handler handler = new Handler(lift);
-		assertEquals(false, handler.curFloorHaveRequest2(0));
+		assertEquals(false, handler.curFloorHaveRequest(0));
 	}
 	
 	
@@ -389,7 +389,7 @@ public class testElevatorSimulator {
 				super(lift);
 			}
 			
-			public boolean curFloorHaveRequest2(int f) {
+			public boolean curFloorHaveRequest(int f) {
 				return true;
 			}
 			
@@ -421,7 +421,7 @@ public class testElevatorSimulator {
 				super(lift);
 			}
 			
-			public boolean curFloorHaveRequest2(int f) {
+			public boolean curFloorHaveRequest(int f) {
 				return true;
 			}
 			
@@ -471,7 +471,7 @@ public class testElevatorSimulator {
 				super(lift);
 			}
 			
-			public boolean curFloorHaveRequest2(int f) {
+			public boolean curFloorHaveRequest(int f) {
 				return true;
 			}
 			

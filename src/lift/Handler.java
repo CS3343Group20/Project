@@ -8,7 +8,6 @@ import controlSystem.CMS;
 import controlSystem.Request;
 import controlSystem.RequestSystem;
 import exceptions.OverWeightException;
-import lift.loadState.Full;
 import lift.loadState.Idle;
 import main.Passenger;
 
@@ -38,7 +37,9 @@ public class Handler {
 		outputDroppedMsg(i);
 	}
 
-	public boolean curFloorHaveRequest2(int f) {
+
+	public boolean curFloorHaveRequest(int f) {
+
 		if(cms.flrHaveRequest(f)) {
 			return true;
 		}	
@@ -79,13 +80,15 @@ public class Handler {
 			if(lift.getCurrentFloor()==0&&lift.isEmpty()&&!lift.haveReqAccepted()) {//reset lift status
 				lift.setDirection(1);
 				lift.setStatus(new Idle());
+
 				outputArrivedGroundMsg();
+
 			}
 		}
 	}
 
 	public void handleCurrentFloor(int f,int index) {//index is lift no.
-		if (curFloorHaveRequest2(f)) {
+		if (curFloorHaveRequest(f)) {
 			Iterator<Request> iterator=null;
 			int dirflag=-1;
 			Floor flr=cms.getBuilding().getFlrMap().get((Integer) f);
@@ -108,9 +111,10 @@ public class Handler {
 						count++;
 						
 					} catch (OverWeightException e) {
+
 						outputIgnoreMsg(count);
 						b.getFlrMap().get(f).setUpflag(false);
-						lift.setStatus(new Full());
+
 						break;
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -123,7 +127,9 @@ public class Handler {
 				if (!flr.haveDownReq()) {
 					flr.setDownflag(false);
 				}
+
 				outputLoadedMsg(index,count,lift.getCurrentFloor());
+
 				if(dirflag==1)
 					lift.getUpReqFloorList().remove((Integer) f);	
 				else
@@ -132,6 +138,7 @@ public class Handler {
 			
 		}
 		checkArriveToTarget(index);
+
 	}
 	
 	private boolean isNotGoingToTheGround(Lift li) {
@@ -152,5 +159,6 @@ public class Handler {
 
 	private void outputDroppedMsg(int i) {
 		System.out.printf("lift %s dropped Passenger!%n",i);
+
 	}
 }

@@ -34,9 +34,8 @@ public class CMS{
 	public void setCurrentTime(int t) {time=t;}
 	public int getCurrentTime() {return time;}
 
-	public void assignClosest(int reqf,int reqDir) {//{here have problem: dir is fixed}
-		//TODO check if any lift has request on that floor already, if yes then assign that lift
-		
+
+	public void assignClosest(int reqf,int reqDir) {//{here have problem: dir is fixed}		
 		int shortestDistance=Integer.MAX_VALUE;
 		Lift assignLift=null;
 		int reqFloor=reqf;

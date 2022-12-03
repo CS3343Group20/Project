@@ -5,21 +5,19 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import controlSystem.CMS;
-import controlSystem.Passenger;
 import controlSystem.Request;
-import controlSystem.RequestComparator;
 import exceptions.timeException.TimeFormatException;
 import simulator.Simulator;
 import time.TimeConverter;
-
+import utils.RequestComparator;
 //Exceptions
 import exceptions.InsufficientArgumentException;
 public class Main {
 	
 	public static void main(String[] args) throws ParseException, InsufficientArgumentException {	
 		CMS cms= CMS.getInstance(); // create a cms instance
-		cms.createLift(120); // create a lift with 120 KG capacity
-		cms.createLift(120); // create a lift with 120 KG capacity
+		cms.createLift(1000); // create a lift with 1000 KG capacity
+		cms.createLift(1000); // create a lift with 1000 KG capacity
 		String requestTime="";
         Simulator sim=new Simulator();
         ArrayList<Request> inputList=new ArrayList<>();

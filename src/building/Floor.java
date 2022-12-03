@@ -6,7 +6,7 @@ import controlSystem.Request;
 
 public class Floor {
 	ArrayList<Request> goUpList,goDownList;
-	boolean upflag,downflag;
+	boolean upflag,downflag;//these flag are used for marking whether the request are accepted by any lift
 	int floorNum;
 	public Floor(int f) {
 		goUpList=new ArrayList<>();

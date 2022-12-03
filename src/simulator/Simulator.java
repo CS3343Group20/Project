@@ -33,15 +33,15 @@ public class Simulator {//userless now just ignore it
 					cms.operate(currentTime);
 				}
 			}
-			else {
-				for (Map.Entry<Integer, Floor> flrMap: b.getFlrMap().entrySet()) {
+			else {//{cur bug: if have multiple ppl on same req flr & dir flr, will only handle the first ppl}
+				for (Map.Entry<Integer, Floor> flrMap: b.getFlrMap().entrySet()) {//check all req in all floor
 					Floor f=flrMap.getValue();
 					if (f.haveUpReq(currentTime)&&!f.getUpflag()) {//have request and not yet accepted by any lift
-						cms.assignClosest2(flrMap.getKey(), 1,1);
+						cms.assignClosest(flrMap.getKey(),1);
 						System.out.println("trigger up assign");
 					}
 					if (f.haveDownReq(currentTime)&&!f.getDownflag()) {
-						cms.assignClosest2(flrMap.getKey(), 0,0);
+						cms.assignClosest(flrMap.getKey(),0);
 						System.out.println("trigger down assign");
 					}
 				}

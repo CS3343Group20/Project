@@ -34,10 +34,12 @@ public class CMS{
 	public void setCurrentTime(int t) {time=t;}
 	public int getCurrentTime() {return time;}
 
+
 	public void assignClosest(int reqf,int reqDir) {//{here have problem: dir is fixed}		
 		int shortestDistance=Integer.MAX_VALUE;
 		Lift assignLift=null;
 		int reqFloor=reqf;
+		int assignLiftdir=-1;
 		for (Lift lift:liftList) {
 			int dir=lift.getDirection();
 			// if status ok, same dir, not passed
@@ -46,6 +48,7 @@ public class CMS{
 				if(distance<shortestDistance) {//if calculated result is smaller than shortest dis, assign the lift and update shortest dis
 					assignLift=lift;
 					shortestDistance=distance;
+					assignLiftdir=dir;
 				}
 			}
 			else {
@@ -53,6 +56,7 @@ public class CMS{
 				if(distance<shortestDistance) {
 					assignLift=lift;
 					shortestDistance=distance;
+					assignLiftdir=dir;
 				}
 			}
 		}

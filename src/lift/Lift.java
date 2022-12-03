@@ -49,12 +49,7 @@ public class Lift {
 	public void move() {
 		handler.directionHandle();
 		if (!this.getStatus().equals("idle")) {
-			if (direction==1) {
-				currentFloor++;
-			}
-			else {
-				currentFloor--;
-			}
+			currentFloor=((direction==1)? currentFloor+1:currentFloor-1);
 		}
 	}
 	public boolean isEmpty() {
@@ -75,30 +70,17 @@ public class Lift {
 		if(dir==1&&reqDir==0) {//if lift is going up but req is going down
 			int highest=0;//initialise lowest target floor in passengerList
 			for (Passenger p:passengerList) {
-				if(p.getTargetFloor()>highest) {
-					highest=p.getTargetFloor();
-				}	
+				highest=((p.getTargetFloor()>highest)? p.getTargetFloor():highest);
 			}
-			if (highest<reqf) {//if lift is going up and the highest flr passenger going is less than the down request
-				shortestDist=reqf-highest;
-			}
-			else if(highest>reqf) {
-				shortestDist=highest-reqf;
-			}
+			shortestDist = ((highest<reqf)? reqf-highest:highest-reqf);
 		}
 		else if(dir==0 && reqDir==1){//if lift is going down but req is going up
 			int lowest=Integer.MAX_VALUE;//initialise highest target floor in passengerList
 			for (Passenger p:passengerList) {
-				if (p.getTargetFloor()<lowest) {
-					lowest=p.getTargetFloor();
-				}
+				lowest=((p.getTargetFloor()<lowest)? p.getTargetFloor():lowest);
 			}
-			if(lowest<shortestDist) {//if lift is going down and the lowest flr passenger going is higher than the up request
-				shortestDist=lowest-reqf;
-			}
-			else if (lowest>shortestDist) {
-				shortestDist=reqf-lowest;
-			}
+			//if lift is going down and the lowest flr passenger going is higher than the up request
+			shortestDist = ((lowest<shortestDist)? lowest-reqf:reqf-lowest); 
 		}
 		return shortestDist;
 	}

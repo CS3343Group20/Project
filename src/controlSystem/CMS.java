@@ -89,24 +89,18 @@ public class CMS{
 			return true;
 		else if(status.equals("loaded")) {
 			if(sameDir(lift,reqDir)) {
-				if(checkPassed(lift,reqDir,reqf)) {
-					return false;
-				}
-				else return true;
+				return(!checkPassed(lift,reqDir,reqf));
 			}
 		}
 		return false;
 	}
 	private boolean checkPassed(Lift lift,int dir, int reqf) {
 		if (dir==1) {//go up
-			if(lift.getCurrentFloor()>reqf)
-				return true;
-			else return false;
+			return(lift.getCurrentFloor()>reqf);
+
 		}
 		else {//go down
-			if(lift.getCurrentFloor()<reqf)
-				return true;
-			else return false;
+			retrun(lift.getCurrentFloor()<reqf);
 		}
 	}
 	private boolean sameDir(Lift lift, int dir) {
@@ -117,10 +111,7 @@ public class CMS{
 	}
 	
 	public boolean curHaveRequest() {
-		if(reqSys.getAllReq().isEmpty())
-			return false;
-		else 
-			return true;
+		return (!reqSys.getAllReq().isEmpty()); 
 	}
 	public boolean flrHaveRequest(int f) {
 		return this.building.getFlrMap().get(f).haveReq();

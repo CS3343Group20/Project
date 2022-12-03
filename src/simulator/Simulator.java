@@ -19,14 +19,15 @@ public class Simulator {//userless now just ignore it
 		System.out.printf("------------------Start simulation-----------------%n%n");
 		while (currentTime!=86400) {
 			Iterator<Request> itr=inputList.iterator();
-			while (itr.hasNext()) {
-				Request r=itr.next();
-				if (r.getRequestTime()<=currentTime) {//put request inside the req System when time meet in input
-					r.getPassenger().makeRequest(currentTime);
-					itr.remove();
-				}
-				else break;
-			}
+			putRequest(itr);
+//			while (itr.hasNext()) {
+//				Request r=itr.next();
+//				if (r.getRequestTime()<=currentTime) {//put request inside the req System when time meet in input
+//					r.getPassenger().makeRequest(currentTime);
+//					itr.remove();
+//				}
+//				else break;
+//			}
 			cms.setCurrentTime(currentTime);
 			if(!cms.curHaveRequest()) {
 				if(cms.anyLiftRunning()) {
@@ -50,5 +51,17 @@ public class Simulator {//userless now just ignore it
 			currentTime++;
 		}
 		System.out.println("Simulation ends!");
+	}
+	
+	public void putRequest(Iterator<Request> itr) {
+		while (itr.hasNext()) {
+			Request r=itr.next();
+			if (r.getRequestTime()<=currentTime) {//put request inside the req System when time meet in input
+				r.getPassenger().makeRequest(currentTime);
+				itr.remove();
+			}
+			else break;
+		}
+		
 	}
 }

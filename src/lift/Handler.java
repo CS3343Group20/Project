@@ -40,10 +40,8 @@ public class Handler {
 
 	public boolean curFloorHaveRequest(int f) {
 
-		if(cms.flrHaveRequest(f)) {
-			return true;
-		}	
-		return false;
+		return(cms.flrHaveRequest(f));
+
 	}
 
 	public void checkArriveToTarget(int i) {

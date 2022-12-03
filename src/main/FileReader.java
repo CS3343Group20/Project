@@ -28,9 +28,6 @@ public class FileReader {
 				String[] inputcmd;
 				inputcmd = sc.nextLine().split(" ");
 	        	requestTime = inputcmd[0];
-	        	if (requestTime.equals("-1")) { //input -1 to terminate input
-	        		break;
-	        	}
 	        	if (inputcmd.length < 4) {        		
 	        		throw new InsufficientArgumentException();
 	        	}

@@ -39,11 +39,7 @@ public class Handler {
 
 
 	public boolean curFloorHaveRequest(int f) {
-
-		if(cms.flrHaveRequest(f)) {
-			return true;
-		}	
-		return false;
+		return(cms.flrHaveRequest(f));
 	}
 
 	public void checkArriveToTarget(int i) {
@@ -57,34 +53,34 @@ public class Handler {
 	}
 	public void directionHandle() {
 		if(!lift.getStatus().equals("idle")) {
-			if(!lift.haveReqAccepted()&&lift.isEmpty()) {//no request accepted and no passenger in lift
-				if (isNotGoingToTheGround(lift)){
-					lift.setDirection(0);
-				}
+			if((!lift.haveReqAccepted()&&lift.isEmpty())&&((isNotGoingToTheGround(lift)))) {//no request accepted and no passenger in lift
+				lift.setDirection(0);
 			}
 			else if(!lift.haveReqAccepted()&&!lift.isEmpty()) {//still have passenger in lift
-				int dirflag=0;
-				for (Passenger p:lift.getPassengerList()) {
-					if (p.getDirection()==1) {
-						dirflag=1;
-						break;
-					}
-				}
-				lift.setDirection(dirflag);	
+				determineLiftDirection(lift);
 			}
-			else if(!lift.haveReqGoUp()&&lift.haveReqGoDown()&&lift.isEmpty()) {//accepted request to go down(not packed passenger yet)
-				if(lift.getCurrentFloor()>lift.getDownReqFloorList().get(0)) {//if lift not arrived to target floor yet
-					lift.setDirection(0);
-				}
+			//accepted request to go down(not packed passenger yet) andlift not arrived to target floor yet
+			else if((!lift.haveReqGoUp()&&lift.haveReqGoDown()&&lift.isEmpty())&&(lift.getCurrentFloor()>lift.getDownReqFloorList().get(0))) {
+				lift.setDirection(0);
+
 			}
 			if(lift.getCurrentFloor()==0&&lift.isEmpty()&&!lift.haveReqAccepted()) {//reset lift status
 				lift.setDirection(1);
 				lift.setStatus(new Idle());
-
 				outputArrivedGroundMsg();
-
 			}
 		}
+	}
+
+	private void determineLiftDirection(Lift lift2) {
+		int dirflag=0;
+		for (Passenger p:lift.getPassengerList()) {
+			if (p.getDirection()==1) {
+				dirflag=1;
+				break;
+			}
+		}
+		lift.setDirection(dirflag);	
 	}
 
 	public void handleCurrentFloor(int f,int index) {//index is lift no.
@@ -101,35 +97,7 @@ public class Handler {
 				dirflag=0;
 			}
 			if (dirflag!=-1) {
-				int count=0;
-				while(iterator.hasNext()){
-					Request r =iterator.next();		
-					try {
-						pickupPassenger(r.getPassenger());
-						reqSys.deleteFromList(r);
-						iterator.remove();
-						count++;
-						
-					} catch (OverWeightException e) {
-
-						outputIgnoreMsg(count);
-						b.getFlrMap().get(f).setUpflag(false);
-
-						break;
-					} catch (Exception e) {
-						e.printStackTrace();
-						break;
-					}	
-				}
-				if (!flr.haveUpReq()) {
-					flr.setUpflag(false);
-				}
-				if (!flr.haveDownReq()) {
-					flr.setDownflag(false);
-				}
-
-				outputLoadedMsg(index,count,lift.getCurrentFloor());
-
+				handlePickingup(iterator ,flr ,f , index);
 				if(dirflag==1)
 					lift.getUpReqFloorList().remove((Integer) f);	
 				else
@@ -141,6 +109,34 @@ public class Handler {
 
 	}
 	
+	private void handlePickingup(Iterator<Request> iterator, Floor floor , int floorNum , int i) {
+		int count=0;
+		while(iterator.hasNext()){
+			Request r =iterator.next();		
+			try {
+				pickupPassenger(r.getPassenger());
+				reqSys.deleteFromList(r);
+				iterator.remove();
+				count++;
+				
+			} catch (OverWeightException e) {
+				outputIgnoreMsg(count);
+				b.getFlrMap().get(floorNum).setUpflag(false);
+				break;
+			} catch (Exception e) {
+				e.printStackTrace();
+				break;
+			}	
+		}
+		if (!floor.haveUpReq()) {
+			floor.setUpflag(false);
+		}
+		if (!floor.haveDownReq()) {
+			floor.setDownflag(false);
+		}
+		outputLoadedMsg(i,count,lift.getCurrentFloor());
+	}
+
 	private boolean isNotGoingToTheGround(Lift li) {
 		return(li.getCurrentFloor()>0 && li.getDirection()==1);
 	}

@@ -17,9 +17,7 @@ public class Passenger {
 		this.weight=weight;
 		this.currentFloor=cfloor;
 		this.targetFloor=tfloor;
-
 		direction=((currentFloor<targetFloor)? 1:0);
-
 
 	}
 	public int getCurrentFloor() {return currentFloor;}

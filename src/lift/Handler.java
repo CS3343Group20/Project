@@ -115,6 +115,12 @@ public class Handler {
 						break;
 					}	
 				}
+				if (!flr.haveUpReq()) {
+					flr.setUpflag(false);
+				}
+				if (!flr.haveDownReq()) {
+					flr.setDownflag(false);
+				}
 				System.out.printf("Lift %s Loaded %s people at %s/F %n",index,count,lift.getCurrentFloor());
 				if(dirflag==1)
 					lift.getUpReqFloorList().remove((Integer) f);	

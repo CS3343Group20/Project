@@ -8,7 +8,6 @@ import controlSystem.CMS;
 import controlSystem.Request;
 import controlSystem.RequestSystem;
 import exceptions.OverWeightException;
-import lift.loadState.Full;
 import lift.loadState.Idle;
 import main.Passenger;
 
@@ -39,7 +38,7 @@ public class Handler {
 		System.out.printf("lift %s dropped Passenger!%n",i);
 	}
 
-	public boolean curFloorHaveRequest2(int f) {
+	public boolean curFloorHaveRequest(int f) {
 		if(cms.flrHaveRequest(f)) {
 			return true;
 		}	
@@ -85,7 +84,7 @@ public class Handler {
 		}
 	}
 	public void handleCurrentFloor(int f,int index) {//index is lift no.
-		if (curFloorHaveRequest2(f)) {
+		if (curFloorHaveRequest(f)) {
 			Iterator<Request> iterator=null;
 			int dirflag=-1;
 			Floor flr=cms.getBuilding().getFlrMap().get((Integer) f);
@@ -109,8 +108,7 @@ public class Handler {
 						
 					} catch (OverWeightException e) {
 						System.out.printf("Ignore people %s since overload%n",count);
-						b.getFlrMap().get(f).setUpflag(false);
-						lift.setStatus(new Full());
+						b.getFlrMap().get(f).setUpflag(false);//reset floor request acceptance status for other lift to take care this floor
 						break;
 					} catch (Exception e) {
 						e.printStackTrace();

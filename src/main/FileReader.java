@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import controlSystem.Request;
-import exceptions.timeException.TimeFormatException;
+import exceptions.InsufficientArgumentException;
 import time.TimeConverter;
 import utils.RequestComparator;
 
@@ -24,6 +24,7 @@ public class FileReader {
 		try {
 			Scanner sc= new Scanner(file);
 			while (sc.hasNextLine()) {
+				try {
 				String[] inputcmd;
 				inputcmd = sc.nextLine().split(" ");
 	        	requestTime = inputcmd[0];
@@ -31,25 +32,18 @@ public class FileReader {
 	        		break;
 	        	}
 	        	if (inputcmd.length < 4) {        		
-	        		System.out.println("Insufficient command arguments. Please try again.");
-	        		continue;
+	        		throw new InsufficientArgumentException();
 	        	}
-	        	try {
-	        		parseInTime=TimeConverter.ConvertTime(requestTime);
-				} catch (TimeFormatException e) {
-					e.printStackTrace();
-					System.out.println("Input error ,please try again.");
-					continue;
-				}
-	        	
-	        	
+        		parseInTime=TimeConverter.ConvertTime(requestTime);	
 	            int currentFloor = Integer.parseInt(inputcmd[1]);
-
 	            int targetFloor = Integer.parseInt(inputcmd[2]);
-
 	            int weight = Integer.parseInt(inputcmd[3]);
 	            Passenger p=new Passenger(weight,currentFloor,targetFloor);
 	            inputList.add(new Request(p,parseInTime));
+	            }
+				catch(Exception e) {
+					continue;
+				}
 			}
 			inputList.sort(new RequestComparator());
 		}

@@ -23,7 +23,7 @@ README - CS3343 Lift Simulator (Group 20)
 
 #User Guide
 -----------------------------------------
--Configure input data in "input.txt" under src folder
+-Configure input data in "input.txt" under Source folder
 
 -test input are forming in lines, each line represent a seperate request from passenger, format should be as follow:
 	[request time] [passenger current floor] [passenger target floor] [passenger weight]

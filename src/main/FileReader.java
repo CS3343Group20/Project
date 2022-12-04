@@ -44,6 +44,7 @@ public class FileReader {
 	            inputList.add(new Request(p,parseInTime));
 	            }
 				catch(Exception e) {
+					System.out.println("input case error, will ignore this input line");
 					continue;
 				}
 			}

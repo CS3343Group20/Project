@@ -2,8 +2,10 @@ package controlSystem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import building.Building;
+import building.Floor;
 import lift.Lift;
 import lift.loadState.Loaded;
 import time.TimeConverter;
@@ -29,7 +31,7 @@ public class CMS{
 	public void setCurrentTime(int t) {time=t;}
 	public int getCurrentTime() {return time;}
 
-	public void assignClosest(int reqf,int reqDir) {//{here have problem: dir is fixed}		
+	public void assignClosest(int reqf,int reqDir) {	
 		int shortestDistance=Integer.MAX_VALUE;
 		Lift assignLift=null;
 		int reqFloor=reqf;
@@ -124,4 +126,16 @@ public class CMS{
 	private int calculateDistance(Lift lift, int reqf) {return  Math.abs(reqf-lift.getCurrentFloor());}
 	public boolean curHaveRequest() {return (!reqSys.getAllReq().isEmpty()); }
 	public boolean flrHaveRequest(int f) {return this.building.getFlrMap().get(f).haveReq();}
+	public void assignLift(Building building) {
+		for (Map.Entry<Integer, Floor> flrMap: building.getFlrMap().entrySet()) {//check all req in all floor
+			Floor f=flrMap.getValue();
+			if (f.haveUpReq(time)&&!f.getUpflag()) {//have request and not yet accepted by any lift
+				assignClosest(flrMap.getKey(),1);
+			}
+			if (f.haveDownReq(time)&&!f.getDownflag()) {
+				assignClosest(flrMap.getKey(),0);
+			}
+		}
+		
+	}
 }

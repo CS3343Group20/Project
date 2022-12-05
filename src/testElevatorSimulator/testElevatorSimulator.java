@@ -48,6 +48,7 @@ public class testElevatorSimulator {
 			cms.getBuilding().getFlrMap().get(i).getDownQueue().clear();
 	
 		}
+		cms.getLiftList().clear();
 	}
 	
 	//------------------Start Testing----------------------
@@ -58,13 +59,9 @@ public class testElevatorSimulator {
 	@Test
 	public void testMain() throws Exception {
 		setOutput();
-		InputStream stdin = System.in;
-		//System.setIn(new ByteArrayInputStream("00:00:00 1 3 50".getBytes()));
-		System.setIn(new ByteArrayInputStream("-1".getBytes()));
 		Main.main(new String[0]);	
-		System.setIn(stdin);
+		
 
-		//assertEquals("lift created!lift created!Enter request time (hh:mm:ss)|current floor|target floor|weight:------------------Start simulation-----------------Simulation ends!", getOutput());
 	}
 	
 	
@@ -163,6 +160,23 @@ public class testElevatorSimulator {
 		assertEquals(true, f.haveDownReq(0));
 	}
 	
+	
+
+	//Simulatro.java
+	//--------------------------------------------------
+	//test Simulatro.java StartSimulation()
+
+	@Test
+	public void testSS() {
+		Lift lift = new Lift(120);
+		Passenger passenger = new Passenger(50, 2, 5);
+		lift.getPassengerList().add(passenger);
+		
+		int result = lift.checkClosestFromPassenger(1, 6, 0);
+		
+		assertEquals(1, result);
+		
+	}
 	
 
 	//Lift.java
@@ -792,6 +806,43 @@ public class testElevatorSimulator {
 		
 		assertEquals(false,cms.curHaveRequest());
 	}
+	
+	//test CMS.java anyLiftRunning()
+	//false
+	@Test
+	public void testALR_1() {
+		CMS cms=CMS.getInstance();
+		
+		assertEquals(false,cms.anyLiftRunning());
+	}
+	
+	//test CMS.java anyLiftRunning()
+	//true
+	@Test
+	public void testALR_2() {
+		CMS cms=CMS.getInstance();
+		cms.createLift(120);
+		cms.getLiftList().get(0).setStatus(new Loaded());
+		assertEquals(true,cms.anyLiftRunning());
+		clean();
+	}
+		
+	
+	
+	//test CMS.java assignLift()
+	//true
+	@Test
+	public void testASL_1() {
+		CMS cms=CMS.getInstance();
+		Building b = new Building(6);
+		Passenger p = new Passenger(60,4,0);
+		Request r = new Request(p,0);
+		b.getFlrMap().get(4).AddtoQueue(r);
+		assertEquals(true,cms.anyLiftRunning());
+	}
+		
+		
+		
 	
 
 	//TimeConverter.java

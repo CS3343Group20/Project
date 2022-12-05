@@ -19,18 +19,13 @@ public class CMS{
 		reqSys=new RequestSystem(this);
 		liftList=new ArrayList<Lift>();
 		this.building= new Building(20);
-	};
-	public static CMS getInstance() {
-		return instance;
 	}
 	public void createLift(int capacity) {
 		liftList.add(new Lift(capacity));
 		System.out.println("Lift created!");
 	}
-	public RequestSystem getReqSys() {
-		return reqSys;
-	}
-
+	public static CMS getInstance() {return instance;}
+	public RequestSystem getReqSys() {return reqSys;}
 	public void setCurrentTime(int t) {time=t;}
 	public int getCurrentTime() {return time;}
 
@@ -41,86 +36,64 @@ public class CMS{
 		for (Lift lift:liftList) {
 			int dir=lift.getDirection();
 			// if status ok, same dir, not passed
-			if (checkAvailablity(lift,reqDir,reqf)) {//check if current lift is able to pick up the passenger in req flr
-				int distance= calculateDistance(lift,reqf);
-				if(distance<shortestDistance) {//if calculated result is smaller than shortest dis, assign the lift and update shortest dis
-					assignLift=lift;
-					shortestDistance=distance;
+			int distance1= calculateDistance(lift,reqf);
+			int distance2=lift.checkClosestFromPassenger(dir,reqf,reqDir);
+			if ((checkAvailablity(lift,reqDir,reqf))&&(distance1<shortestDistance)) {//check if current lift is able to pick up the passenger in req flr
+				assignLift=lift;
+				shortestDistance=distance1;
+			}
+			else if(distance2<shortestDistance){
+				//check whether the lift will be closest after finishing the current travel
+				assignLift=lift;
+				shortestDistance=distance2;
 				}
 			}
-			else {
-				int distance=lift.checkClosestFromPassenger(dir,reqf,reqDir);//check whether the lift will be closest after finishing the current travel
-				if(distance<shortestDistance) {
-					assignLift=lift;
-					shortestDistance=distance;
-				}
-			}
-		}
 		if (assignLift!=null) {
-			if (assignLift.getStatus().equals("idle")) {
-				assignLift.setStatus(new Loaded());
+			updateLiftInfo(assignLift);
+			updatefloorInfo(assignLift , reqDir, building, reqFloor,reqf);
+		}
+	}
+
+	private void updatefloorInfo(Lift assignLift, int reqDir, Building building2, int reqFloor, int reqf) {
+		//lift assign to that floor request and set flag to prevent future allocation
+		if(reqDir==1) {
+			if(!assignLift.getUpReqFloorList().contains(reqFloor)) {//does not contains up request from that floor before
+				assignLift.getUpReqFloorList().add(reqFloor);
 			}
-			
-			//lift assign to that floor request and set flag to prevent future allocation
-			if(reqDir==1) {
-				if(!assignLift.getUpReqFloorList().contains(reqFloor)) {//does not contains up request from that floor before
-					assignLift.getUpReqFloorList().add(reqFloor);
-				}
-				building.getFlrMap().get(reqf).setUpflag(true);
-				assignLift.setReqDir(1);
-			}	
-			else {
-				if(!assignLift.getDownReqFloorList().contains(reqFloor)) {//does not contains down request from that floor before
-					assignLift.getDownReqFloorList().add(reqFloor);
-				}
-				building.getFlrMap().get(reqf).setDownflag(true);
-				assignLift.setReqDir(0);
+			building.getFlrMap().get(reqf).setUpflag(true);
+			assignLift.setReqDir(1);
+		}	
+		else {
+			if(!assignLift.getDownReqFloorList().contains(reqFloor)) {//does not contains down request from that floor before
+				assignLift.getDownReqFloorList().add(reqFloor);
 			}
-				
+			building.getFlrMap().get(reqf).setDownflag(true);
+			assignLift.setReqDir(0);
+		}
+	}
+	private void updateLiftInfo(Lift assignLift) {
+		if (assignLift.getStatus().equals("idle")) {
+			assignLift.setStatus(new Loaded());
 		}
 	}
 	private boolean checkAvailablity(Lift lift, int reqDir,int reqf) {
 		String status=lift.getStatus();
 		if (status.equals("idle"))
 			return true;
-		else if(status.equals("loaded")) {
-			if(sameDir(lift,reqDir)) {
-				if(checkPassed(lift,reqDir,reqf)) {
-					return false;
-				}
-				else return true;
-			}
+		else if((status.equals("loaded"))&&(sameDir(lift,reqDir))) {
+			return(!checkPassed(lift,reqDir,reqf));
 		}
 		return false;
 	}
 	private boolean checkPassed(Lift lift,int dir, int reqf) {
 		if (dir==1) {//go up
-			if(lift.getCurrentFloor()>reqf)
-				return true;
-			else return false;
+			return(lift.getCurrentFloor()>reqf);
 		}
 		else {//go down
-			if(lift.getCurrentFloor()<reqf)
-				return true;
-			else return false;
+			return(lift.getCurrentFloor()<reqf);
 		}
 	}
-	private boolean sameDir(Lift lift, int dir) {
-		return lift.getDirection()==dir;
-	}
-	private int calculateDistance(Lift lift, int reqf) {
-		return  Math.abs(reqf-lift.getCurrentFloor());
-	}
-	
-	public boolean curHaveRequest() {
-		if(reqSys.getAllReq().isEmpty())
-			return false;
-		else 
-			return true;
-	}
-	public boolean flrHaveRequest(int f) {
-		return this.building.getFlrMap().get(f).haveReq();
-	}
+
 
 	public void operate(int curTime) {
 		int i=0;
@@ -145,12 +118,10 @@ public class CMS{
 		}
 		return false;
 	}
-	public Building getBuilding() {
-		return building;
-	}
-	
-	public List<Lift> getLiftList(){
-		return liftList;
-		
-	}
+	public Building getBuilding() {return building;}
+	public List<Lift> getLiftList(){return liftList;}
+	private boolean sameDir(Lift lift, int dir) {return lift.getDirection()==dir;}
+	private int calculateDistance(Lift lift, int reqf) {return  Math.abs(reqf-lift.getCurrentFloor());}
+	public boolean curHaveRequest() {return (!reqSys.getAllReq().isEmpty()); }
+	public boolean flrHaveRequest(int f) {return this.building.getFlrMap().get(f).haveReq();}
 }

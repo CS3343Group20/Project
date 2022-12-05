@@ -32,17 +32,14 @@ public class Handler {
 		
 	}
 	public void dropPassenger(Passenger p,Iterator<Passenger> itr,int i) {
-		int newWeight=lift.getLoadWeight()-p.getWeight();
-		lift.setLoadWeight(newWeight);
+		lift.setLoadWeight(lift.getLoadWeight()-p.getWeight());
 		itr.remove();
-		System.out.printf("lift %s dropped Passenger!%n",i);
+		outputDroppedMsg(i);
 	}
 
+
 	public boolean curFloorHaveRequest(int f) {
-		if(cms.flrHaveRequest(f)) {
-			return true;
-		}	
-		return false;
+		return(cms.flrHaveRequest(f));
 	}
 
 	public void checkArriveToTarget(int i) {
@@ -56,33 +53,36 @@ public class Handler {
 	}
 	public void directionHandle() {
 		if(!lift.getStatus().equals("idle")) {
-			if(!lift.haveReqAccepted()&&lift.isEmpty()) {//no request accepted and no passenger in lift
-				if (lift.getCurrentFloor()>0 && lift.getDirection()==1) {//get back to ground
-					lift.setDirection(0);
-				}
+			if((!lift.haveReqAccepted()&&lift.isEmpty())&&((isNotGoingToTheGround(lift)))) {//no request accepted and no passenger in lift
+				lift.setDirection(0);
 			}
 			else if(!lift.haveReqAccepted()&&!lift.isEmpty()) {//still have passenger in lift
-				int dirflag=0;
-				for (Passenger p:lift.getPassengerList()) {
-					if (p.getDirection()==1) {
-						dirflag=1;
-						break;
-					}
-				}
-				lift.setDirection(dirflag);	
+				determineLiftDirection(lift);
 			}
-			else if(!lift.haveReqGoUp()&&lift.haveReqGoDown()&&lift.isEmpty()) {//accepted request to go down(not packed passenger yet)
-				if(lift.getCurrentFloor()>lift.getDownReqFloorList().get(0)) {//if lift not arrived to target floor yet
-					lift.setDirection(0);
-				}
+			//accepted request to go down(not packed passenger yet) andlift not arrived to target floor yet
+			else if((!lift.haveReqGoUp()&&lift.haveReqGoDown()&&lift.isEmpty())&&(lift.getCurrentFloor()>lift.getDownReqFloorList().get(0))) {
+				lift.setDirection(0);
+
 			}
 			if(lift.getCurrentFloor()==0&&lift.isEmpty()&&!lift.haveReqAccepted()) {//reset lift status
 				lift.setDirection(1);
 				lift.setStatus(new Idle());
-				System.out.printf("arrived to 0/F, idling...%n");
+				outputArrivedGroundMsg();
 			}
 		}
 	}
+
+	private void determineLiftDirection(Lift lift2) {
+		int dirflag=0;
+		for (Passenger p:lift.getPassengerList()) {
+			if (p.getDirection()==1) {
+				dirflag=1;
+				break;
+			}
+		}
+		lift.setDirection(dirflag);	
+	}
+
 	public void handleCurrentFloor(int f,int index) {//index is lift no.
 		if (curFloorHaveRequest(f)) {
 			Iterator<Request> iterator=null;
@@ -97,31 +97,7 @@ public class Handler {
 				dirflag=0;
 			}
 			if (dirflag!=-1) {
-				int count=0;
-				while(iterator.hasNext()){
-					Request r =iterator.next();		
-					try {
-						pickupPassenger(r.getPassenger());
-						reqSys.deleteFromList(r);
-						iterator.remove();
-						count++;
-						
-					} catch (OverWeightException e) {
-						System.out.printf("Ignore people %s since overload%n",count);
-						b.getFlrMap().get(f).setUpflag(false);//reset floor request acceptance status for other lift to take care this floor
-						break;
-					} catch (Exception e) {
-						e.printStackTrace();
-						break;
-					}	
-				}
-				if (!flr.haveUpReq()) {
-					flr.setUpflag(false);
-				}
-				if (!flr.haveDownReq()) {
-					flr.setDownflag(false);
-				}
-				System.out.printf("Lift %s Loaded %s people at %s/F %n",index,count,lift.getCurrentFloor());
+				handlePickingup(iterator ,flr ,f , index);
 				if(dirflag==1)
 					lift.getUpReqFloorList().remove((Integer) f);	
 				else
@@ -130,5 +106,55 @@ public class Handler {
 			
 		}
 		checkArriveToTarget(index);
+
+	}
+	
+	private void handlePickingup(Iterator<Request> iterator, Floor floor , int floorNum , int i) {
+		int count=0;
+		while(iterator.hasNext()){
+			Request r =iterator.next();		
+			try {
+				pickupPassenger(r.getPassenger());
+				reqSys.deleteFromList(r);
+				iterator.remove();
+				count++;
+				
+			} catch (OverWeightException e) {
+				outputIgnoreMsg(count);
+				b.getFlrMap().get(floorNum).setUpflag(false);
+				break;
+			} catch (Exception e) {
+				e.printStackTrace();
+				break;
+			}	
+		}
+		if (!floor.haveUpReq()) {
+			floor.setUpflag(false);
+		}
+		if (!floor.haveDownReq()) {
+			floor.setDownflag(false);
+		}
+		outputLoadedMsg(i,count,lift.getCurrentFloor());
+	}
+
+	private boolean isNotGoingToTheGround(Lift li) {
+		return(li.getCurrentFloor()>0 && li.getDirection()==1);
+	}
+
+	private void outputIgnoreMsg(int c) {
+		System.out.printf("Ignore people %s since overload%n",c);
+	}
+
+	private void outputLoadedMsg(int i, int c, int f) {
+		System.out.printf("Lift %s Loaded %s people at %s/F %n",i,c,f);
+	}
+
+	private void outputArrivedGroundMsg() {
+		System.out.printf("arrived to 0/F, idling...%n");
+	}
+
+	private void outputDroppedMsg(int i) {
+		System.out.printf("lift %s dropped Passenger!%n",i);
+
 	}
 }

@@ -1,7 +1,4 @@
 package controlSystem;
-
-import java.util.Comparator;
-
 import main.Passenger;
 
 public class Request{

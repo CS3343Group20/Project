@@ -1,8 +1,6 @@
 package lift;
 
 import java.util.ArrayList;
-
-import controlSystem.CMS;
 import lift.loadState.Idle;
 import lift.loadState.Status;
 import main.Passenger;

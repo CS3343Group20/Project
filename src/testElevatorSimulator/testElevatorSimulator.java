@@ -419,128 +419,72 @@ public class testElevatorSimulator {
 	
 	
 	//-----
-	//test Handle.java handleCurrentFloor()
-	//have up request
-	
-	@Test
-	public void testHandleCF_1() {
-		class stubHandler extends Handler{
+		//test Handle.java handleCurrentFloor()
+		//have up request
+		
+		@Test
+		public void testHandleCF_1() {
 
-			public stubHandler(Lift lift) {
-				super(lift);
-			}
+
+			CMS cms = CMS.getInstance();
+			Lift lift = new Lift(120);
+			Handler h = new Handler(lift);
+			lift.getUpReqFloorList().add(0);
+			Passenger p = new Passenger(50, 0, 1);
+			Request r = new Request(p, 0);
+			RequestSystem rs = cms.getReqSys();
+			h.handleCurrentFloor(0, 0);
+			assertEquals(0, rs.getAllReq().size());
 			
-			public boolean curFloorHaveRequest(int f) {
-				return true;
-			}
-			
+			clean();
 		}
 		
-		CMS cms = CMS.getInstance();
-		Lift lift = new Lift(120);
-		stubHandler sh = new stubHandler(lift);
-		lift.getUpReqFloorList().add(0);
-		Passenger p = new Passenger(50, 0, 1);
-		Request r = new Request(p, 0);
-		RequestSystem rs = cms.getReqSys();
-		//rs.request(r);
-		sh.handleCurrentFloor(0, 0);
-		assertEquals(0, rs.getAllReq().size());
-		assertEquals(1, lift.getPassengerList().size());
+		//test Handle.java handleCurrentFloor()
+		//have down request
 		
-		clean();
-	}
-	
-	//test Handle.java handleCurrentFloor()
-	//have down request
-	
-	@Test
-	public void testHandleCF_2() {
-		class stubHandler extends Handler{
-
-			public stubHandler(Lift lift) {
-				super(lift);
-			}
+		@Test
+		public void testHandleCF_2() {
 			
-			public boolean curFloorHaveRequest(int f) {
-				return true;
-			}
+			CMS cms = CMS.getInstance();
+			Lift lift = new Lift(120);
+			Handler h = new Handler(lift);
+			lift.getDownReqFloorList().add(3);
+			Passenger p = new Passenger(50, 3, 1);
+			Request r = new Request(p, 0);
+			RequestSystem rs = cms.getReqSys();
+			h.handleCurrentFloor(3, 0);
 			
+			assertEquals(0, rs.getAllReq().size());
+			
+			clean();
 		}
 		
-		CMS cms = CMS.getInstance();
-		Lift lift = new Lift(120);
-		stubHandler sh = new stubHandler(lift);
-		lift.getDownReqFloorList().add(3);
-		Passenger p = new Passenger(50, 3, 1);
-		Request r = new Request(p, 0);
-		RequestSystem rs = cms.getReqSys();
-		rs.request(r);
-		assertEquals(1, cms.getBuilding().getFlrMap().get(3).getDownQueue().size());
-		sh.handleCurrentFloor(3, 0);
 		
-		assertEquals(0, rs.getAllReq().size());
-		assertEquals(1, lift.getPassengerList().size());
 		
-		clean();
-	}
-	
-
-	
-	//test Handle.java handleCurrentFloor()
-	//have request but overWeightexception
-	@Test
-	public void testHandleCF_5() {
-		class stubHandler extends Handler{
-
-			public stubHandler(Lift lift) {
-				super(lift);
-			}
+		//test Handle.java handleCurrentFloor()
+		//have request but overWeightexception
+		@Test
+		public void testHandleCF_3() {
 			
-			public boolean curFloorHaveRequest(int f) {
-				return true;
-			}
+			CMS cms = CMS.getInstance();
+			Lift lift = new Lift(40);
+			Handler h = new Handler(lift);
+			lift.getUpReqFloorList().add(0);
+			Passenger p = new Passenger(50, 0, 1);
+			Request r = new Request(p, 0);
+			RequestSystem rs = cms.getReqSys();
+			h.handleCurrentFloor(0, 0);
 			
+			assertDoesNotThrow(() -> {h.handleCurrentFloor(0, 0);});
+
+			assertEquals(0, rs.getAllReq().size());
+					
+
 		}
-		
-		CMS cms = CMS.getInstance();
-		Lift lift = new Lift(40);
-		stubHandler sh = new stubHandler(lift);
-		lift.getUpReqFloorList().add(0);
-		Passenger p = new Passenger(50, 0, 1);
-		Request r = new Request(p, 0);
-		RequestSystem rs = cms.getReqSys();
-		rs.request(r);
-		sh.handleCurrentFloor(0, 0);
-		
-		assertDoesNotThrow(() -> {sh.handleCurrentFloor(0, 0);});
 
-		assertEquals("full", lift.getStatus());
-		assertEquals(1, rs.getAllReq().size());
-		assertEquals(0, lift.getPassengerList().size());
-				
-
-	}
 
 	
-	//---
-	//test Handle.java isNotGoingToTheGround()
-	//idle
-	@Test
-	public void testINGTTG() throws Exception {
-		setOutput();
-		String expect = "Curren time: 0:0:0 ";
-		expect += "-----------------------------------";
-		expect+= "lift 0 in 0/F (0)";
-		expect+= "lift 0 is idling......";
-		
-		CMS cms=CMS.getInstance();
-		cms.getLiftList().clear();
-		cms.createLift(120);
-		cms.operate(0);
-		//assertEquals(expect,getOutput());
-		
-	}
+	
 	
 	
 	

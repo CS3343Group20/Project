@@ -20,7 +20,7 @@ public class Handler {
 		this.lift=lift;
 	};
 	
-	public void pickupPassenger(Passenger p) throws Exception{
+	public void pickupPassenger(Passenger p) throws OverWeightException{
 		int newWeight=lift.getLoadWeight()+p.getWeight();
 		if(newWeight>lift.getCapacity()) {
 			throw new OverWeightException();
@@ -124,14 +124,15 @@ public class Handler {
 				b.getFlrMap().get(floorNum).setUpflag(false);
 				break;
 
+			}
+			if (!floor.haveUpReq()) {
+				floor.setUpflag(false);
+			}
+			if (!floor.haveDownReq()) {
+				floor.setDownflag(false);
+			}
+			outputLoadedMsg(i,count,lift.getCurrentFloor());
 		}
-		if (!floor.haveUpReq()) {
-			floor.setUpflag(false);
-		}
-		if (!floor.haveDownReq()) {
-			floor.setDownflag(false);
-		}
-		outputLoadedMsg(i,count,lift.getCurrentFloor());
 	}
 
 	private boolean isNotGoingToTheGround(Lift li) {

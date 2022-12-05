@@ -478,15 +478,102 @@ public class testElevatorSimulator {
 			assertDoesNotThrow(() -> {h.handleCurrentFloor(0, 0);});
 
 			assertEquals(0, rs.getAllReq().size());
+			clean();
+
+		}
+		
+		//test Handle.java handleCurrentFloor()
+		//have request but overWeightexception
+		@Test
+		public void testHandleCF_4() {
+			
+			CMS cms = CMS.getInstance();
+			Passenger p = new Passenger(50, 1, 0);
+			Passenger p1 = new Passenger(50, 0, 1);
+			Request r = new Request(p, 0);
+			Floor f = cms.getBuilding().getFlrMap().get(1);
+			
+			cms.createLift(120);
+			Lift lift = cms.getLiftList().get(0);
+			Handler h = new Handler(lift);
+			f.AddtoQueue(r);
+			lift.getDownReqFloorList().add(1);
+			lift.setStatus(new Loaded());
+			lift.getPassengerList().add(p1);
+			lift.move();
+			lift.getPassengerList().clear();
+			h.handleCurrentFloor(1, 0);
+
+			assertEquals(1, lift.getDownReqFloorList().size());
 					
 
 		}
 
 
+		//------
+		//test Handler.java directionHandle()
+		@Test
+		public void testdirectionHandle_1() {
+			Passenger p = new Passenger(50,0,3);
+			
+			Lift l = new Lift(120);
+			l.setStatus(new Loaded());
+			l.getPassengerList().add(p);
+			l.move();
+			l.getPassengerList().clear();
+			l.getDownReqFloorList().add(0);
+			Handler h = new Handler(l);
+			h.directionHandle();
+			assertEquals(0,l.getDirection());
+			
+		}
+		
+		//------
+		//test Handler.java directionHandle()
+		@Test
+		public void testdirectionHandle_2() {
+			Passenger p = new Passenger(50,0,3);
+			
+			Lift l = new Lift(120);
+			l.setStatus(new Loaded());
+			l.getPassengerList().add(p);
+			l.move();
+			l.getDownReqFloorList().add(0);
+			Handler h = new Handler(l);
+			h.directionHandle();
+			assertEquals(1,l.getDirection());
+
+		}
+			
+		//------
+		//test Handler.java directionHandle()
+		@Test
+		public void testdirectionHandle_3() {
+			Lift l = new Lift(120);
+			l.setStatus(new Loaded());
+			Handler h = new Handler(l);
+			h.directionHandle();
+			assertEquals(1,l.getDirection());
+
+		}
 	
 	
-	
-	
+		//------
+		//test Handler.java directionHandle()
+		@Test
+		public void testdirectionHandle_4() {
+			Passenger p = new Passenger(50,0,3);
+			
+			Lift l = new Lift(120);
+			l.setStatus(new Loaded());
+			l.getPassengerList().add(p);
+			l.move();
+			l.getPassengerList().clear();
+			Handler h = new Handler(l);
+			h.directionHandle();
+			assertEquals(0,l.getDirection());
+
+		}
 	
 	
 

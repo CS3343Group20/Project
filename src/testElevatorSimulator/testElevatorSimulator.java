@@ -56,7 +56,6 @@ public class testElevatorSimulator {
 	//-----------------------------------------------------
 	
 	//Main.java
-	//remark: can't find how to have multiple input
 	@Test
 	public void testMain() throws Exception {
 		setOutput();
@@ -65,7 +64,7 @@ public class testElevatorSimulator {
 
 	}
 	
-	
+
 	
 	//Building.java
 	//-------------------------------------------

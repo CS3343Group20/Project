@@ -27,7 +27,7 @@ public class Simulator {//userless now just ignore it
 				}
 			}
 			else {
-				assignLift(building);
+				cms.assignLift(building);
 				cms.operate(currentTime);
 			}
 			currentTime++;
@@ -35,17 +35,6 @@ public class Simulator {//userless now just ignore it
 		System.out.println("------------------Simulation ends!------------------");
 	}
 	
-	private void assignLift(Building building) {
-		for (Map.Entry<Integer, Floor> flrMap: building.getFlrMap().entrySet()) {//check all req in all floor
-			Floor f=flrMap.getValue();
-			if (f.haveUpReq(currentTime)&&!f.getUpflag()) {//have request and not yet accepted by any lift
-				cms.assignClosest(flrMap.getKey(),1);
-			}
-			if (f.haveDownReq(currentTime)&&!f.getDownflag()) {
-				cms.assignClosest(flrMap.getKey(),0);
-			}
-		}
-	}
 	public void putRequest(Iterator<Request> itr) {
 		while (itr.hasNext()) {
 			Request r=itr.next();

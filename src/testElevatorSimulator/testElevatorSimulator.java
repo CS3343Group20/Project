@@ -43,8 +43,11 @@ public class testElevatorSimulator {
 		CMS cms = CMS.getInstance();
 		RequestSystem rs = cms.getReqSys();
 		rs.getAllReq().clear();
-		cms.getBuilding().getFlrMap().get(1).getUpQueue().clear();
-		cms.getBuilding().getFlrMap().get(1).getDownQueue().clear();
+		for(int i=0; i<6;i++) {
+			cms.getBuilding().getFlrMap().get(i).getUpQueue().clear();
+			cms.getBuilding().getFlrMap().get(i).getDownQueue().clear();
+	
+		}
 	}
 	
 	//------------------Start Testing----------------------
@@ -192,19 +195,6 @@ public class testElevatorSimulator {
 		
 	}
 	
-	//test Lift.java checkClosestFromPassenger()
-	//lift down, req up, exist lowest reqflr < request flr
-	@Test
-	public void testCheckClosestFP_3() {
-		Lift lift = new Lift(120);
-		Passenger passenger = new Passenger(50, 5, 2);
-		lift.getPassengerList().add(passenger);
-		
-		int result = lift.checkClosestFromPassenger(0, 3, 1);
-		//missing situation?
-		assertEquals(1, result);
-		
-	}
 
 	//test Lift.java checkClosestFromPassenger()
 	//lift down, req up, exist lowest reqflr > request flr
@@ -217,6 +207,20 @@ public class testElevatorSimulator {
 		int result = lift.checkClosestFromPassenger(0, 1, 1);
 		
 		assertEquals(1, result);
+		
+	}
+	
+	//test Lift.java checkClosestFromPassenger()
+	//lift down, req up, exist lowest reqflr > request flr
+	@Test
+	public void testCheckClosestFP_5() {
+		Lift lift = new Lift(120);
+		Passenger passenger = new Passenger(50, 1, 0);
+		lift.getPassengerList().add(passenger);
+		
+		int result = lift.checkClosestFromPassenger(0, 2, 1);
+		
+		assertEquals(2, result);
 		
 	}
 	
@@ -250,6 +254,17 @@ public class testElevatorSimulator {
 		
 	}
 	
+	//test Lift.java haveReqAccepted()
+	//going down (test fail cannot get in the 2nd if)
+	@Test
+	public void testHRA() {
+			
+		Lift lift = new Lift(120);
+		lift.getUpReqFloorList().add(0);
+		
+		assertEquals(true, lift.haveReqAccepted());
+		
+	}
 	
 	
 	
@@ -326,14 +341,7 @@ public class testElevatorSimulator {
 	}
 	
 	
-	
-	//------
-	//test Handle.java curFloorHaveAccepedReq()
-	//What is the use of curFloorHaveAccepedReq()
-	@Test
-	public void testCurHvAcpReq() {
 
-	}
 	
 	//-----
 	//test Handle.java curFloorHaveRequest2()
@@ -402,7 +410,7 @@ public class testElevatorSimulator {
 		Passenger p = new Passenger(50, 0, 1);
 		Request r = new Request(p, 0);
 		RequestSystem rs = cms.getReqSys();
-		rs.request(r);
+		//rs.request(r);
 		sh.handleCurrentFloor(0, 0);
 		assertEquals(0, rs.getAllReq().size());
 		assertEquals(1, lift.getPassengerList().size());
@@ -496,14 +504,39 @@ public class testElevatorSimulator {
 
 	}
 
-	//test Handle.java handleCurrentFloor()
-	//exception
-	//remark: no idea how to trigger the exception
-	public void testHandleCF_6() {
-		
+	
+	
+
+	//Passenger.java
+	//------------------------------
+	//test Passenger.java makeRequest()
+	//
+	@Test
+	public void testMR() {
+		Passenger p = new Passenger(50,0,1);
+		p.makeRequest(0);
+		CMS cms = CMS.getInstance();
+		assertEquals(1, cms.getReqSys().getAllReq().size());
+		clean();
 	}
 	
+
 	
+
+	//RequestSystem.java
+	//------------------------------
+	//test RequestSystem.java deleteFromList()
+	//
+	@Test
+	public void testDFL() {
+		Passenger p = new Passenger(50,0,1);
+		p.makeRequest(0);
+		CMS cms = CMS.getInstance();
+		RequestSystem rs = cms.getReqSys();
+		rs.deleteFromList(rs.getAllReq().get(0));
+		assertEquals(0, cms.getReqSys().getAllReq().size());
+		clean();
+	}
 	
 	
 	//CMS.java
@@ -798,18 +831,6 @@ public class testElevatorSimulator {
 		assertEquals(0,result);
 	}
 	
-	//test TimeConverter.java ConvertTime()
-	//wrong format
-	//remark: no idea how to trigger this exception
-	@Test
-	public void testConTime_4() throws TimeFormatException {
-		TimeConverter t = new TimeConverter();
-		String time = "aa,aa,aa";
-		//TimeFormatException ex = assertThrows(TimeFormatException.class, ()->{
-			//t.ConvertTime(time);
-		//});
-		//assertEquals("Too less parameters!",ex.getMessage());
-	}
 	
 	
 	

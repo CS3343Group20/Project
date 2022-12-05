@@ -123,10 +123,7 @@ public class Handler {
 				outputIgnoreMsg(count);
 				b.getFlrMap().get(floorNum).setUpflag(false);
 				break;
-			} catch (Exception e) {
-				e.printStackTrace();
-				break;
-			}	
+
 		}
 		if (!floor.haveUpReq()) {
 			floor.setUpflag(false);

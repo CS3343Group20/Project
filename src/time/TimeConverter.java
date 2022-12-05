@@ -15,18 +15,14 @@ public class TimeConverter {
 		if(timeFragments.length<3) {
 			throw new TimeFormatException("Too less parameters!");
 		}
-		try {
-			h=TimeExtracter.extractHour(timeFragments[0]);
-			m=TimeExtracter.extractMinute(timeFragments[1]);
-			s=TimeExtracter.extractSecond(timeFragments[2]);
-			unitChecking(h,m,s);
-			int timeInSecond=h*60*60+m*60+s;
-			return timeInSecond;
-		}
-		catch (TimeFormatException ex){
-			throw ex;
-		}
-		
+
+		h=TimeExtracter.extractHour(timeFragments[0]);
+		m=TimeExtracter.extractMinute(timeFragments[1]);
+		s=TimeExtracter.extractSecond(timeFragments[2]);
+		unitChecking(h,m,s);
+		int timeInSecond=h*60*60+m*60+s;
+		return timeInSecond;
+
 	}
 	public static String fromStoTime(int second) {
 		String hour = String.valueOf(second/3600);

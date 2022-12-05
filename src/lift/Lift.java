@@ -91,10 +91,10 @@ public class Lift {
 					lowest=p.getTargetFloor();
 				}
 			}
-			if(lowest<shortestDist) {//if lift is going down and the lowest flr passenger going is higher than the up request
+			if(lowest>reqf) {//if lift is going down and the lowest flr passenger going is higher than the up request
 				shortestDist=lowest-reqf;
 			}
-			else if (lowest>shortestDist) {
+			else if (lowest<reqf) {
 				shortestDist=reqf-lowest;
 			}
 		}

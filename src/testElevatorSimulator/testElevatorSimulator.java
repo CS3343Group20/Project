@@ -280,7 +280,26 @@ public class testElevatorSimulator {
 		
 	}
 	
+	//test Lift.java haveReqGoDown()
+	@Test
+	public void testHRGD() {
+			
+		Lift lift = new Lift(120);
+		lift.getDownReqFloorList().add(0);
+		
+		assertEquals(true, lift.haveReqGoDown());
+		
+	}
 	
+	//test Lift.java haveReqGoDown()
+	@Test
+	public void testHRGD2() {
+			
+		Lift lift = new Lift(120);
+		
+		assertEquals(false, lift.haveReqGoDown());
+		
+	}
 	
 	
 	
@@ -466,22 +485,7 @@ public class testElevatorSimulator {
 		clean();
 	}
 	
-	
-	//test Handle.java handleCurrentFloor()
-	//have up request, but lift is going down with passenger
-	// not test now, next phrase
-	@Test
-	public void testHandleCF_3() {
-		
-	}
-		
-	//test Handle.java handleCurrentFloor()
-	//have down request, but lift is going up with passenger
-	// not test now, next phrase
-	@Test
-	public void testHandleCF_4() {
-		
-	}	
+
 	
 	//test Handle.java handleCurrentFloor()
 	//have request but overWeightexception
@@ -518,6 +522,27 @@ public class testElevatorSimulator {
 
 	}
 
+	
+	//---
+	//test Handle.java isNotGoingToTheGround()
+	//idle
+	@Test
+	public void testINGTTG() throws Exception {
+		setOutput();
+		String expect = "Curren time: 0:0:0 ";
+		expect += "-----------------------------------";
+		expect+= "lift 0 in 0/F (0)";
+		expect+= "lift 0 is idling......";
+		
+		CMS cms=CMS.getInstance();
+		cms.getLiftList().clear();
+		cms.createLift(120);
+		cms.operate(0);
+		//assertEquals(expect,getOutput());
+		
+	}
+	
+	
 	
 	
 
@@ -838,7 +863,8 @@ public class testElevatorSimulator {
 		Passenger p = new Passenger(60,4,0);
 		Request r = new Request(p,0);
 		b.getFlrMap().get(4).AddtoQueue(r);
-		assertEquals(true,cms.anyLiftRunning());
+		cms.setCurrentTime(0);
+		cms.assignLift(b);
 	}
 		
 		

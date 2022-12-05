@@ -9,7 +9,7 @@ import building.Floor;
 import controlSystem.CMS;
 import controlSystem.Request;
 
-public class Simulator {//userless now just ignore it
+public class Simulator {
 	private int currentTime;
 	private CMS cms=CMS.getInstance();
 	public Simulator() {
@@ -35,7 +35,7 @@ public class Simulator {//userless now just ignore it
 		System.out.println("------------------Simulation ends!------------------");
 	}
 	
-	public void putRequest(Iterator<Request> itr) {
+	public void putRequest(Iterator<Request> itr) {//put user input to request system
 		while (itr.hasNext()) {
 			Request r=itr.next();
 			if (r.getRequestTime()<=currentTime) {//put request inside the req System when time meet in input

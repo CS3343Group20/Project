@@ -21,6 +21,7 @@ import exceptions.timeException.*;
 import main.*;
 import simulator.*;
 import time.*;
+import utils.RequestComparator;
 
 
 public class testElevatorSimulator {
@@ -161,6 +162,19 @@ public class testElevatorSimulator {
 	}
 	
 	
+	//RequestComparator.java
+	//--------------------------------------------------
+	@Test
+	public void testRC() {
+		Passenger p1 = new Passenger(60,1,0);
+		Passenger p2 = new Passenger(60,1,0);
+		Request r1 = new Request(p1,0);
+		Request r2 = new Request(p2,1);
+		RequestComparator rc=new RequestComparator();	
+		assertEquals(-1, rc.compare(r1,r2));
+	}
+	
+	
 
 	//Simulatro.java
 	//--------------------------------------------------
@@ -204,7 +218,7 @@ public class testElevatorSimulator {
 		lift.getPassengerList().add(passenger);
 		
 		int result = lift.checkClosestFromPassenger(1, 4, 0);
-		//missing situation?
+
 		assertEquals(1, result);
 		
 	}
@@ -213,7 +227,7 @@ public class testElevatorSimulator {
 	//test Lift.java checkClosestFromPassenger()
 	//lift down, req up, exist lowest reqflr > request flr
 	@Test
-	public void testCheckClosestFP_4() {
+	public void testCheckClosestFP_3() {
 		Lift lift = new Lift(120);
 		Passenger passenger = new Passenger(50, 5, 2);
 		lift.getPassengerList().add(passenger);
@@ -227,7 +241,7 @@ public class testElevatorSimulator {
 	//test Lift.java checkClosestFromPassenger()
 	//lift down, req up, exist lowest reqflr > request flr
 	@Test
-	public void testCheckClosestFP_5() {
+	public void testCheckClosestFP_4() {
 		Lift lift = new Lift(120);
 		Passenger passenger = new Passenger(50, 1, 0);
 		lift.getPassengerList().add(passenger);
@@ -301,6 +315,38 @@ public class testElevatorSimulator {
 		
 	}
 	
+	//test Lift.java getStatus()
+	@Test
+	public void testgetStatus_1() {
+			
+		Lift lift = new Lift(120);
+		lift.setStatus(new Loaded());
+		assertEquals("loaded", lift.getStatus());
+		
+	}
+	
+	//test Lift.java getStatus()
+	@Test
+	public void testgetStatus_2() {
+			
+		Lift lift = new Lift(120);
+		lift.setStatus(new Idle());
+		assertEquals("idle", lift.getStatus());
+		
+	}
+	
+	//test Lift.java getStatus()
+	@Test
+	public void testStatus() {
+			
+		Lift lift = new Lift(120);
+		lift.setStatus(new Idle());
+		assertEquals("idle", lift.getStatus());
+		
+		lift.setStatus(new Loaded());
+		assertEquals("loaded", lift.getStatus());
+		
+	}
 	
 	
 	//Handle.java
@@ -406,7 +452,7 @@ public class testElevatorSimulator {
 		assertEquals(true, handler.curFloorHaveRequest(1));
 		clean();
 	}
-	//remarks: Floor.java addToUp/DownQueue are not necessary? I think we can delete them
+	
 	
 	//test Handle.java curFloorHaveRequest2()
 	//no request
@@ -575,6 +621,17 @@ public class testElevatorSimulator {
 
 		}
 	
+	//Request.java
+	//------------------------------
+	//
+	@Test
+	public void testR() {
+		Passenger p = new Passenger(50,0,1);
+		Request r = new Request(p,0);
+		assertEquals(p, r.getPassenger());
+		assertEquals(0, r.getRequestTime());
+
+	}
 	
 
 	//Passenger.java
@@ -683,21 +740,12 @@ public class testElevatorSimulator {
 		cms.assignClosest(0, 1);	
 	}
 	
-	//test CMS.java assignClosest()
-	//1 time, all F
-	@Test
-	public void testassignClosest_2() {
-		CMS cms=CMS.getInstance();
-		cms.getLiftList().clear();
-		cms.createLift(120);
-		cms.getLiftList().get(0).setStatus(new Full());
-		cms.assignClosest(0, 1);	
-	}
+
 	
 	//test CMS.java assignClosest()
 	//1 time, not sameDir, reqDir=0, have reqf
 	@Test
-	public void testassignClosest_3() {
+	public void testassignClosest_2() {
 		CMS cms=CMS.getInstance();
 		cms.getLiftList().clear();
 		cms.createLift(120);
@@ -716,7 +764,7 @@ public class testElevatorSimulator {
 	//test CMS.java assignClosest()
 	//1 time, not sameDir, reqDir=0
 	@Test
-	public void testassignClosest_4() {
+	public void testassignClosest_3() {
 		CMS cms=CMS.getInstance();
 		cms.getLiftList().clear();
 		cms.createLift(120);
@@ -735,7 +783,7 @@ public class testElevatorSimulator {
 	//test CMS.java assignClosest()
 	//1 time, sameDir, DownPass
 	@Test
-	public void testassignClosest_5() {
+	public void testassignClosest_4() {
 		CMS cms=CMS.getInstance();
 		cms.getLiftList().clear();
 		cms.createLift(120);
@@ -754,7 +802,7 @@ public class testElevatorSimulator {
 	//test CMS.java assignClosest()
 	//1 time, sameDir, Down not Pass
 	@Test
-	public void testassignClosest_6() {
+	public void testassignClosest_5() {
 		CMS cms=CMS.getInstance();
 		cms.getLiftList().clear();
 		cms.createLift(120);
@@ -773,7 +821,7 @@ public class testElevatorSimulator {
 	//test CMS.java assignClosest()
 	//1 time, sameDir, up Pass
 	@Test
-	public void testassignClosest_7() {
+	public void testassignClosest_6() {
 		CMS cms=CMS.getInstance();
 		cms.getLiftList().clear();
 		cms.createLift(120);
@@ -791,7 +839,7 @@ public class testElevatorSimulator {
 	//test CMS.java assignClosest()
 	//1 time, sameDir, up not Pass
 	@Test
-	public void testassignClosest_8() {
+	public void testassignClosest_7() {
 		CMS cms=CMS.getInstance();
 		cms.getLiftList().clear();
 		cms.createLift(120);
@@ -809,7 +857,7 @@ public class testElevatorSimulator {
 	//test CMS.java assignClosest()
 	//1 time, sameDir, up not Pass
 	@Test
-	public void testassignClosest_9() {
+	public void testassignClosest_8() {
 		CMS cms=CMS.getInstance();
 		cms.getLiftList().clear();
 		cms.createLift(120);
@@ -827,7 +875,7 @@ public class testElevatorSimulator {
 	//test CMS.java assignClosest()
 	//1 time, idle
 	@Test
-	public void testassignClosest_10() {
+	public void testassignClosest_9() {
 		CMS cms=CMS.getInstance();
 		cms.getLiftList().clear();
 		cms.createLift(120);
@@ -1048,4 +1096,37 @@ public class testElevatorSimulator {
 		});
 		assertEquals("Second incorrect",ex.getMessage());
 	}
+	
+	
+	//test TimeExtracter.java extractSecond()
+	//<0
+	@Test
+	public void testTimeFE() throws TimeFormatException {
+		TimeExtracter t = new TimeExtracter();
+		
+		String hour = "25";
+		HourException hex = assertThrows(HourException.class, ()->{
+			t.extractHour(hour);
+		});
+		assertEquals("Hour incorrect",hex.getMessage());
+		
+		String min = "61";
+		MinuteException mex = assertThrows(MinuteException.class, ()->{
+				t.extractMinute(min);
+		});
+		assertEquals("Minute incorrect",mex.getMessage());
+		
+		String Second = "-1";
+		SecondException sdex = assertThrows(SecondException.class, ()->{
+			t.extractSecond(Second);
+		});
+		assertEquals("Second incorrect",sdex.getMessage());
+	}
+	
+	
+	
+	
 }
+
+
+
